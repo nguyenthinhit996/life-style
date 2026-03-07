@@ -71,6 +71,31 @@ export async function getSeriesTree(seriesId: string) {
   return { ...s, chapters: chaptersWithLessons }
 }
 
+// ── Post mutations (in-memory until Phase 7 Firestore) ────
+export async function createPost(data: Omit<Post, 'id'>): Promise<Post> {
+  const post: Post = { id: Date.now().toString(), ...data } as Post
+  posts.push(post)
+  return post
+}
+
+export async function updatePost(id: string, data: Partial<Post>): Promise<Post | null> {
+  const idx = posts.findIndex(p => p.id === id)
+  if (idx === -1) return null
+  posts[idx] = { ...posts[idx], ...data, id }
+  return posts[idx]
+}
+
+export async function deletePost(id: string): Promise<boolean> {
+  const idx = posts.findIndex(p => p.id === id)
+  if (idx === -1) return false
+  posts.splice(idx, 1)
+  return true
+}
+
+export async function getPostById(id: string): Promise<Post | undefined> {
+  return posts.find(p => p.id === id)
+}
+
 // ── Auth ──────────────────────────────────────────────────
 export async function getUserByEmail(email: string): Promise<User | undefined> {
   return users.find(u => u.email === email)

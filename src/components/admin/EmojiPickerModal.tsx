@@ -207,7 +207,7 @@ export default function EmojiPickerModal({ current, onSelect, onClose }: Props) 
               className={`shrink-0 rounded-lg px-3 py-1.5 text-[11px] font-medium tracking-wide transition-all ${
                 cat === c
                   ? 'bg-violet-600 text-white shadow-[0_2px_12px_rgba(124,58,237,0.4)]'
-                  : 'text-slate-500 hover:bg-white/[0.06] hover:text-slate-300'
+                  : 'border border-white/[0.08] bg-white/[0.04] text-slate-400 hover:border-white/20 hover:bg-white/[0.08] hover:text-white'
               }`}
             >
               {c}

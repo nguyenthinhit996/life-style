@@ -103,10 +103,11 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
   if (!editor) return null
 
   return (
-    <div className="overflow-clip rounded-xl border border-white/[0.08] bg-[#0C1524]">
+    <div className="relative">
 
-      {/* ── Toolbar ── */}
-      <div className="sticky top-0 z-10 flex flex-wrap items-center gap-0.5 border-b border-white/[0.07] bg-[#0C1524] px-2 py-1.5">
+      {/* ── Floating Toolbar ── */}
+      <div className="sticky top-4 z-10 mb-3">
+        <div className="flex flex-wrap items-center gap-0.5 rounded-xl border border-white/[0.12] bg-[#0e1829]/90 px-2 py-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.5)] backdrop-blur-md">
 
         {/* History */}
         <Btn title="Undo" onClick={() => editor.chain().focus().undo().run()}
@@ -240,61 +241,65 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
             </button>
           </>
         )}
-      </div>
+        </div>{/* end floating inner */}
 
-      {/* ── Link input popup ── */}
-      {showLinkInput && (
-        <div className="flex items-center gap-2 border-b border-white/[0.07] bg-white/[0.02] px-3 py-2">
-          <input
-            autoFocus
-            value={linkUrl}
-            onChange={e => setLinkUrl(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter') addLink(); if (e.key === 'Escape') setShowLinkInput(false) }}
-            placeholder="https://..."
-            className="flex-1 rounded bg-white/5 px-3 py-1 text-sm text-white placeholder-slate-600 outline-none focus:ring-1 focus:ring-violet-500"
-          />
-          <button type="button" onClick={addLink}
-            className="rounded bg-violet-600 px-3 py-1 text-xs font-semibold text-white hover:bg-violet-500">
-            Insert
-          </button>
-          <button type="button" onClick={() => setShowLinkInput(false)}
-            className="rounded px-2 py-1 text-xs text-slate-500 hover:text-white">
-            Cancel
-          </button>
-        </div>
-      )}
+        {/* ── Link input popup ── */}
+        {showLinkInput && (
+          <div className="mt-1 flex items-center gap-2 rounded-xl border border-white/[0.1] bg-[#0e1829]/95 px-3 py-2 shadow-lg backdrop-blur-md">
+            <input
+              autoFocus
+              value={linkUrl}
+              onChange={e => setLinkUrl(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') addLink(); if (e.key === 'Escape') setShowLinkInput(false) }}
+              placeholder="https://..."
+              className="flex-1 rounded bg-white/5 px-3 py-1 text-sm text-white placeholder-slate-600 outline-none focus:ring-1 focus:ring-violet-500"
+            />
+            <button type="button" onClick={addLink}
+              className="rounded bg-violet-600 px-3 py-1 text-xs font-semibold text-white hover:bg-violet-500">
+              Insert
+            </button>
+            <button type="button" onClick={() => setShowLinkInput(false)}
+              className="rounded px-2 py-1 text-xs text-slate-500 hover:text-white">
+              Cancel
+            </button>
+          </div>
+        )}
 
-      {/* ── Image URL input popup ── */}
-      {showImageInput && (
-        <div className="flex items-center gap-2 border-b border-white/[0.07] bg-white/[0.02] px-3 py-2">
-          <input
-            autoFocus
-            value={imageUrl}
-            onChange={e => setImageUrl(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter') addImage(); if (e.key === 'Escape') setShowImageInput(false) }}
-            placeholder="Image URL https://..."
-            className="flex-1 rounded bg-white/5 px-3 py-1 text-sm text-white placeholder-slate-600 outline-none focus:ring-1 focus:ring-violet-500"
-          />
-          <button type="button" onClick={addImage}
-            className="rounded bg-violet-600 px-3 py-1 text-xs font-semibold text-white hover:bg-violet-500">
-            Insert
-          </button>
-          <button type="button" onClick={() => setShowImageInput(false)}
-            className="rounded px-2 py-1 text-xs text-slate-500 hover:text-white">
-            Cancel
-          </button>
-        </div>
-      )}
+        {/* ── Image URL input popup ── */}
+        {showImageInput && (
+          <div className="mt-1 flex items-center gap-2 rounded-xl border border-white/[0.1] bg-[#0e1829]/95 px-3 py-2 shadow-lg backdrop-blur-md">
+            <input
+              autoFocus
+              value={imageUrl}
+              onChange={e => setImageUrl(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') addImage(); if (e.key === 'Escape') setShowImageInput(false) }}
+              placeholder="Image URL https://..."
+              className="flex-1 rounded bg-white/5 px-3 py-1 text-sm text-white placeholder-slate-600 outline-none focus:ring-1 focus:ring-violet-500"
+            />
+            <button type="button" onClick={addImage}
+              className="rounded bg-violet-600 px-3 py-1 text-xs font-semibold text-white hover:bg-violet-500">
+              Insert
+            </button>
+            <button type="button" onClick={() => setShowImageInput(false)}
+              className="rounded px-2 py-1 text-xs text-slate-500 hover:text-white">
+              Cancel
+            </button>
+          </div>
+        )}
+      </div>{/* end sticky wrapper */}
 
       {/* ── Editor area ── */}
-      <EditorContent editor={editor} />
+      <div className="overflow-clip rounded-xl border border-white/[0.08] bg-[#0C1524]">
+        <EditorContent editor={editor} />
 
-      {/* ── Word count ── */}
-      <div className="flex justify-end border-t border-white/[0.05] px-4 py-1.5">
-        <span className="text-[11px] text-slate-700">
-          {editor.storage.characterCount?.words?.() ?? editor.getText().split(/\s+/).filter(Boolean).length} words
-        </span>
+        {/* ── Word count ── */}
+        <div className="flex justify-end border-t border-white/[0.05] px-4 py-1.5">
+          <span className="text-[11px] text-slate-700">
+            {editor.storage.characterCount?.words?.() ?? editor.getText().split(/\s+/).filter(Boolean).length} words
+          </span>
+        </div>
       </div>
+
     </div>
   )
 }

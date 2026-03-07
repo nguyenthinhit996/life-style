@@ -250,7 +250,7 @@ Password: YOUR_PASSWORD (the one you hashed in Phase 0 Step 0.6)
 
 ## Phase 3 — Admin Dashboard
 
-**Status: NOT STARTED**  
+**Status: ✅ DONE**  
 **Goal:** Full private dashboard to manage posts, series, chapters, and the About page.  
 **Prerequisite:** Phase 2 complete.
 

@@ -2,6 +2,7 @@ import seriesData   from '../../../db/series.json'
 import chaptersData from '../../../db/chapters.json'
 import postsData    from '../../../db/posts.json'
 import usersData    from '../../../db/users.json'
+import aboutData    from '../../../db/about.json'
 import type { Series, Chapter, Post, User } from '@/types'
 
 const series: Series[]    = seriesData   as Series[]
@@ -73,4 +74,9 @@ export async function getSeriesTree(seriesId: string) {
 // ── Auth ──────────────────────────────────────────────────
 export async function getUserByEmail(email: string): Promise<User | undefined> {
   return users.find(u => u.email === email)
+}
+
+// ── About ─────────────────────────────────────────────────
+export async function getAbout() {
+  return aboutData
 }

@@ -198,13 +198,13 @@ export default function EmojiPickerModal({ current, onSelect, onClose }: Props) 
         </div>
 
         {/* Category tabs */}
-        <div className="flex gap-1 overflow-x-auto px-5 pb-3" style={{ scrollbarWidth: 'none' }}>
+        <div className="flex flex-wrap gap-1 px-5 pb-3">
           {CATS.map(c => (
             <button
               key={c}
               type="button"
               onClick={() => setCat(c)}
-              className={`shrink-0 rounded-lg px-3 py-1.5 text-[11px] font-medium tracking-wide transition-all ${
+              className={`rounded-lg px-3 py-1.5 text-[11px] font-medium tracking-wide transition-all ${
                 cat === c
                   ? 'bg-violet-600 text-white shadow-[0_2px_12px_rgba(124,58,237,0.4)]'
                   : 'border border-white/[0.08] bg-white/[0.04] text-slate-400 hover:border-white/20 hover:bg-white/[0.08] hover:text-white'

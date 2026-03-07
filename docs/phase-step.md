@@ -195,7 +195,7 @@ Functions: `cn()`, `slugify()`, `formatDate()`, `calcReadTime()`.
 
 ## Phase 2 — Auth
 
-**Status: NOT STARTED**  
+**Status: ✅ DONE**  
 **Goal:** Admin login/logout with session protection.  
 **Prerequisite:** Phase 1 complete. `.env.local` NEXTAUTH_SECRET set.
 

@@ -237,7 +237,7 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
                     setShowColorPicker(false)
                   }}
                   className={cn(
-                    'h-9 w-9 rounded-xl border-2 transition hover:scale-110 hover:border-white/50',
+                    'h-6 w-6 rounded-lg border-2 transition hover:scale-110 hover:border-white/50',
                     c.value === '' ? 'border-white/20 bg-gradient-to-br from-slate-600 to-slate-800' : 'border-white/10',
                   )}
                   style={c.value ? { backgroundColor: c.value } : {}}

@@ -13,8 +13,8 @@ Phase 1 — Data Layer        ████████████ ✅ DONE
 Phase 2 — Auth              ████████████ ✅ DONE
 Phase 3 — Admin Dashboard   ████████████ ✅ DONE
 Phase 3+ — Enhancements     ████████████ ✅ DONE
-Phase 4 — Public Website    ██░░░░░░░░░░ 🟡 IN PROGRESS  ← NEXT
-Phase 5 — Design Polish     ░░░░░░░░░░░░ 🔴 NOT STARTED
+Phase 4 — Public Website    ████████████ ✅ DONE
+Phase 5 — Design Polish     ████████████ ✅ DONE
 Phase 6 — Firebase          ░░░░░░░░░░░░ ⏳ FUTURE
 Phase 7 — Deployment        ░░░░░░░░░░░░ ⏳ FUTURE
 ```
@@ -78,21 +78,38 @@ Phase 7 — Deployment        ░░░░░░░░░░░░ ⏳ FUTURE
 
 ---
 
-## Phase 4 — Public Website 🟡 IN PROGRESS
+## Phase 4 — Public Website ✅ DONE
 
-### Step 4.1 — Public Layout Shell ✅
-- [x] `src/app/(public)/layout.tsx` — wraps children with Navbar + Footer
-- [x] `src/components/public/Navbar.tsx` — sticky, blur, gradient logo, active link highlight, mobile hamburger
-- [x] `src/components/public/Footer.tsx` — brand tagline, nav links, GitHub icon, year
+- [x] `src/app/page.tsx` — Home page (Hero · Categories · FeaturedPosts)
+- [x] `src/app/(public)/layout.tsx` — wraps public pages with Navbar + Footer + BackToTop
+- [x] `src/components/public/Navbar.tsx` — sticky blur, gradient logo, active link, mobile hamburger
+- [x] `src/components/public/Footer.tsx` — brand, nav links, GitHub
+- [x] `src/components/public/HeroSection.tsx` — gradient blobs + dot grid, CTA buttons
+- [x] `src/components/public/CategoriesSection.tsx` — IT/English/Lifestyle cards
+- [x] `src/components/public/FeaturedPostsSection.tsx` — async, reads getBlogPosts()
+- [x] `src/components/public/PostCard.tsx` — cover image, category badge, date, read time
+- [x] `src/components/public/SeriesCard.tsx` — icon, level badge, tags, chapter/lesson count
+- [x] `src/components/public/BlogListingClient.tsx` — category filter pills + search bar
+- [x] `src/app/(public)/blog/page.tsx` — Blog listing with series + posts
+- [x] `src/app/(public)/blog/[slug]/page.tsx` — Blog post reader with prose, related posts
+- [x] `src/app/(public)/blog/series/[seriesId]/page.tsx` — Series detail + ChapterTree
+- [x] `src/components/public/ChapterTree.tsx` — chapter accordion, lesson rows with status
+- [x] `src/app/(public)/blog/series/[seriesId]/[chapterId]/[slug]/page.tsx` — Lesson reader
+- [x] `src/components/public/LessonNav.tsx` — prev/next lesson, progress bar
+- [x] `src/app/(public)/about/page.tsx` — bio, skills, social links
+- [x] `src/app/not-found.tsx` — 404 page
 
-### Remaining Steps
-- [ ] `src/app/(public)/page.tsx` — Home page (Hero · Categories · Featured Posts · About Teaser)
-- [ ] `src/app/(public)/blog/page.tsx` — Blog listing + filter pills + search
-- [ ] `src/app/(public)/about/page.tsx` — About page
-- [ ] `src/app/(public)/blog/[slug]/page.tsx` — Standalone blog post reader
-- [ ] `src/app/(public)/blog/series/[seriesId]/page.tsx` — Series detail + ChapterTree
-- [ ] `src/app/(public)/blog/series/[seriesId]/[chapterId]/[slug]/page.tsx` — Lesson reader
-- [ ] `src/app/not-found.tsx` — 404 page
+---
+
+## Phase 5 — Design Polish ✅ DONE
+
+- [x] `src/components/public/ReadingProgressBar.tsx` — top bar tracking scroll progress
+- [x] `src/components/public/BackToTop.tsx` — floating button, visible after 400px scroll
+- [x] `src/components/public/PageTransition.tsx` — framer-motion fade + slide transitions
+- [x] `src/components/public/ShareButton.tsx` — client component, copies current URL
+- [x] Open Graph metadata on all page routes (title, description, images)
+- [x] Responsive layout — mobile hamburger menu, single-column fallbacks
+- [x] Dark-mode first design throughout (bg #070D1A · surface #0C1524 · violet/cyan accents)
 
 ---
 

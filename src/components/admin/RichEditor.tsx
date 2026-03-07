@@ -9,6 +9,7 @@ import Highlight from '@tiptap/extension-highlight'
 import Placeholder from '@tiptap/extension-placeholder'
 import { useEffect, useState, useCallback } from 'react'
 import { cn } from '@/lib/utils'
+import ImagePickerModal from '@/components/admin/ImagePickerModal'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface RichEditorProps {
@@ -53,10 +54,9 @@ function Sep() {
 
 // ─── Main component ────────────────────────────────────────────────────────────
 export default function RichEditor({ value, onChange, onPreview, showPreview }: RichEditorProps) {
-  const [linkUrl, setLinkUrl]         = useState('')
-  const [imageUrl, setImageUrl]       = useState('')
+  const [linkUrl, setLinkUrl]             = useState('')
   const [showLinkInput, setShowLinkInput]   = useState(false)
-  const [showImageInput, setShowImageInput] = useState(false)
+  const [showImagePicker, setShowImagePicker] = useState(false)
 
   const editor = useEditor({
     extensions: [
@@ -93,12 +93,10 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
     setShowLinkInput(false)
   }, [editor, linkUrl])
 
-  const addImage = useCallback(() => {
-    if (!editor || !imageUrl.trim()) return
-    editor.chain().focus().setImage({ src: imageUrl }).run()
-    setImageUrl('')
-    setShowImageInput(false)
-  }, [editor, imageUrl])
+  const insertImage = useCallback((url: string) => {
+    if (!editor || !url.trim()) return
+    editor.chain().focus().setImage({ src: url }).run()
+  }, [editor])
 
   if (!editor) return null
 
@@ -207,13 +205,13 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
 
         {/* Link */}
         <Btn title="Insert link" active={editor.isActive('link') || showLinkInput}
-          onClick={() => { setShowImageInput(false); setShowLinkInput(v => !v) }}>
+          onClick={() => { setShowImagePicker(false); setShowLinkInput(v => !v) }}>
           🔗
         </Btn>
 
         {/* Image */}
-        <Btn title="Insert image" active={showImageInput}
-          onClick={() => { setShowLinkInput(false); setShowImageInput(v => !v) }}>
+        <Btn title="Insert image" active={showImagePicker}
+          onClick={() => { setShowLinkInput(false); setShowImagePicker(true) }}>
           🖼
         </Btn>
 
@@ -265,27 +263,7 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
           </div>
         )}
 
-        {/* ── Image URL input popup ── */}
-        {showImageInput && (
-          <div className="mt-1 flex items-center gap-2 rounded-xl border border-white/[0.1] bg-[#0e1829]/95 px-3 py-2 shadow-lg backdrop-blur-md">
-            <input
-              autoFocus
-              value={imageUrl}
-              onChange={e => setImageUrl(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter') addImage(); if (e.key === 'Escape') setShowImageInput(false) }}
-              placeholder="Image URL https://..."
-              className="flex-1 rounded bg-white/5 px-3 py-1 text-sm text-white placeholder-slate-600 outline-none focus:ring-1 focus:ring-violet-500"
-            />
-            <button type="button" onClick={addImage}
-              className="rounded bg-violet-600 px-3 py-1 text-xs font-semibold text-white hover:bg-violet-500">
-              Insert
-            </button>
-            <button type="button" onClick={() => setShowImageInput(false)}
-              className="rounded px-2 py-1 text-xs text-slate-500 hover:text-white">
-              Cancel
-            </button>
-          </div>
-        )}
+        {/* ── Image picker modal ── (rendered via portal below) */}
       </div>{/* end sticky wrapper */}
 
       {/* ── Editor area ── */}
@@ -299,6 +277,14 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
           </span>
         </div>
       </div>
+
+      {/* ── Image picker modal ── */}
+      {showImagePicker && (
+        <ImagePickerModal
+          onInsert={insertImage}
+          onClose={() => setShowImagePicker(false)}
+        />
+      )}
 
     </div>
   )

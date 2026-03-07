@@ -103,10 +103,10 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
   if (!editor) return null
 
   return (
-    <div className="overflow-hidden rounded-xl border border-white/[0.08] bg-[#0C1524]">
+    <div className="overflow-clip rounded-xl border border-white/[0.08] bg-[#0C1524]">
 
       {/* ── Toolbar ── */}
-      <div className="flex flex-wrap items-center gap-0.5 border-b border-white/[0.07] bg-white/[0.025] px-2 py-1.5">
+      <div className="sticky top-0 z-10 flex flex-wrap items-center gap-0.5 border-b border-white/[0.07] bg-[#0C1524] px-2 py-1.5">
 
         {/* History */}
         <Btn title="Undo" onClick={() => editor.chain().focus().undo().run()}

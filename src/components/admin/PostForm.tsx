@@ -128,8 +128,9 @@ export default function PostForm({ initialData = {}, allSeries }: PostFormProps)
                   prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl
                   prose-a:text-violet-400 prose-a:no-underline hover:prose-a:underline
                   prose-blockquote:border-violet-500/50 prose-blockquote:text-slate-400
-                  prose-code:rounded prose-code:bg-white/10 prose-code:px-1.5 prose-code:py-0.5 prose-code:text-cyan-300
+                  prose-code:rounded prose-code:bg-transparent prose-code:px-0 prose-code:py-0 prose-code:text-inherit prose-code:before:content-none prose-code:after:content-none
                   prose-pre:bg-[#070D1A] prose-pre:border prose-pre:border-white/[0.07]
+                  [&_pre_code]:bg-[#070D1A] [&_pre_code]:text-cyan-300 [&_pre_code]:px-0
                   prose-img:rounded-xl"
                 dangerouslySetInnerHTML={{ __html: content || '<p class="text-slate-600">Nothing written yet…</p>' }}
               />

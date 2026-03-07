@@ -11,8 +11,9 @@ interface UnsplashPhoto {
   user: { name: string; links: { html: string } }
 }
 
+type ImageSize = 'small' | 'medium' | 'large' | 'full'
 interface ImagePickerModalProps {
-  onInsert: (url: string) => void
+  onInsert: (url: string, size: ImageSize) => void
   onClose: () => void
 }
 
@@ -27,6 +28,7 @@ export default function ImagePickerModal({ onInsert, onClose }: ImagePickerModal
   const [searched, setSearched]     = useState(false)
   const [urlValue, setUrlValue]     = useState('')
   const [hoverId, setHoverId]       = useState<string | null>(null)
+  const [size, setSize]             = useState<ImageSize>('full')
   const inputRef                    = useRef<HTMLInputElement>(null)
 
   // Focus search input on open
@@ -59,9 +61,16 @@ export default function ImagePickerModal({ onInsert, onClose }: ImagePickerModal
   const handleKey = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       if (tab === 'search') search()
-      if (tab === 'url' && urlValue.trim()) { onInsert(urlValue.trim()); onClose() }
+      if (tab === 'url' && urlValue.trim()) { onInsert(urlValue.trim(), size); onClose() }
     }
   }
+
+  const SIZES: { value: ImageSize; label: string; desc: string }[] = [
+    { value: 'small',  label: 'S', desc: '30%'  },
+    { value: 'medium', label: 'M', desc: '55%'  },
+    { value: 'large',  label: 'L', desc: '80%'  },
+    { value: 'full',   label: 'Full', desc: '100%' },
+  ]
 
   return (
     /* ── Backdrop ── */
@@ -80,6 +89,27 @@ export default function ImagePickerModal({ onInsert, onClose }: ImagePickerModal
             <p className="mt-0.5 text-[11px] text-slate-500">
               Search free photos from Unsplash or paste a URL
             </p>
+            {/* Size selector */}
+            <div className="mt-2 flex items-center gap-1.5">
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-600 mr-1">Size</span>
+              {SIZES.map(s => (
+                <button
+                  key={s.value}
+                  type="button"
+                  onClick={() => setSize(s.value)}
+                  title={s.desc}
+                  className={cn(
+                    'rounded-md px-2.5 py-1 text-[11px] font-semibold transition border',
+                    size === s.value
+                      ? 'border-violet-500 bg-violet-600/20 text-violet-300'
+                      : 'border-white/[0.08] text-slate-500 hover:border-white/20 hover:text-slate-300',
+                  )}
+                >
+                  {s.label}
+                  <span className="ml-1 text-[9px] opacity-50">{s.desc}</span>
+                </button>
+              ))}
+            </div>
           </div>
           <button
             onClick={onClose}
@@ -167,7 +197,7 @@ export default function ImagePickerModal({ onInsert, onClose }: ImagePickerModal
                       <button
                         key={photo.id}
                         type="button"
-                        onClick={() => { onInsert(photo.urls.regular); onClose() }}
+                        onClick={() => { onInsert(photo.urls.regular, size); onClose() }}
                         onMouseEnter={() => setHoverId(photo.id)}
                         onMouseLeave={() => setHoverId(null)}
                         className="group relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.03] transition hover:border-violet-500/50 hover:ring-2 hover:ring-violet-500/30"
@@ -238,7 +268,7 @@ export default function ImagePickerModal({ onInsert, onClose }: ImagePickerModal
               />
             )}
             <button
-              onClick={() => { if (urlValue.trim()) { onInsert(urlValue.trim()); onClose() } }}
+              onClick={() => { if (urlValue.trim()) { onInsert(urlValue.trim(), size); onClose() } }}
               disabled={!urlValue.trim()}
               className="self-start rounded-lg bg-violet-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-violet-500 disabled:opacity-40"
             >

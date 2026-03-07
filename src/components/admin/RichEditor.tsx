@@ -3,6 +3,20 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
+
+// Extend Image to support inline width
+const ResizableImage = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      width: {
+        default: null,
+        renderHTML: attrs => (attrs.width ? { style: `width:${attrs.width};height:auto` } : {}),
+        parseHTML: el => el.style.width || null,
+      },
+    }
+  },
+})
 import Underline from '@tiptap/extension-underline'
 import TextAlign from '@tiptap/extension-text-align'
 import Highlight from '@tiptap/extension-highlight'
@@ -65,7 +79,7 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
       Highlight.configure({ multicolor: false }),
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       Link.configure({ openOnClick: false, HTMLAttributes: { class: 'text-violet-400 underline' } }),
-      Image.configure({ HTMLAttributes: { class: 'rounded-lg max-w-full my-4' } }),
+      ResizableImage.configure({ HTMLAttributes: { class: 'rounded-lg my-4' } }),
       Placeholder.configure({ placeholder: 'Start writing your post…' }),
     ],
     content: value,
@@ -93,9 +107,10 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
     setShowLinkInput(false)
   }, [editor, linkUrl])
 
-  const insertImage = useCallback((url: string) => {
+  const insertImage = useCallback((url: string, size: 'small' | 'medium' | 'large' | 'full') => {
     if (!editor || !url.trim()) return
-    editor.chain().focus().setImage({ src: url }).run()
+    const widths = { small: '30%', medium: '55%', large: '80%', full: '100%' }
+    editor.chain().focus().setImage({ src: url, width: widths[size] } as any).run()
   }, [editor])
 
   if (!editor) return null

@@ -8,64 +8,103 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-const navItems = [
-  { href: '/admin',           label: 'Dashboard',  icon: LayoutDashboard },
-  { href: '/admin/posts',     label: 'All Posts',  icon: FileText },
-  { href: '/admin/posts/new', label: 'New Post',   icon: FilePlus },
-  { href: '/admin/series',    label: 'Series',     icon: BookOpen },
-  { href: '/admin/chapters',  label: 'Chapters',   icon: Layers },
-  { href: '/admin/about',     label: 'About Page', icon: User },
+const navSections = [
+  {
+    label: 'Content',
+    items: [
+      { href: '/admin',           label: 'Dashboard', icon: LayoutDashboard },
+      { href: '/admin/posts',     label: 'All Posts', icon: FileText },
+      { href: '/admin/posts/new', label: 'New Post',  icon: FilePlus },
+    ],
+  },
+  {
+    label: 'Manage',
+    items: [
+      { href: '/admin/series',   label: 'Series',    icon: BookOpen },
+      { href: '/admin/chapters', label: 'Chapters',  icon: Layers },
+      { href: '/admin/about',    label: 'About Page', icon: User },
+    ],
+  },
 ]
 
 export default function Sidebar({ user }: { user: any }) {
   const pathname = usePathname()
+  const initials = (user?.name ?? 'P')
+    .split(' ')
+    .map((n: string) => n[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase()
 
   return (
-    <aside className="flex w-64 flex-col justify-between border-r border-white/10 bg-[#0F172A] px-4 py-6">
-      {/* Logo */}
-      <div>
-        <div className="mb-8 px-2 text-xl font-bold text-white">
-          Life‑Style <span className="text-violet-400">Admin</span>
-        </div>
+    <aside className="relative flex w-56 flex-none flex-col border-r border-white/[0.06] bg-[#070D1A] px-3 py-5">
 
-        {/* Nav links */}
-        <nav className="flex flex-col gap-1">
-          {navItems.map(({ href, label, icon: Icon }) => {
-            const active = pathname === href || (href !== '/admin' && pathname.startsWith(href))
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition',
-                  active
-                    ? 'border-l-2 border-violet-500 bg-violet-500/10 text-violet-300'
-                    : 'text-slate-400 hover:bg-white/5 hover:text-white',
-                )}
-              >
-                <Icon size={16} />
-                {label}
-              </Link>
-            )
-          })}
-        </nav>
+      {/* Brand monogram */}
+      <div className="mb-7 flex items-center gap-3 px-2">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-700 text-[11px] font-black tracking-tight text-white shadow-lg shadow-violet-900/40 select-none">
+          LS
+        </div>
+        <div>
+          <p className="font-display text-[13px] font-bold leading-none tracking-tight text-white">Life‑Style</p>
+          <p className="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-600">Admin Panel</p>
+        </div>
       </div>
 
-      {/* User + logout */}
-      <div className="border-t border-white/10 pt-4">
-        <div className="mb-3 px-2">
-          <p className="text-sm font-medium text-white">{user?.name}</p>
-          <p className="text-xs text-slate-500">{user?.email}</p>
-          <span className="mt-1 inline-block rounded bg-violet-500/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-violet-400">
-            Admin
-          </span>
+      {/* Grouped navigation */}
+      <nav className="flex flex-1 flex-col gap-5">
+        {navSections.map(section => (
+          <div key={section.label}>
+            <p className="mb-1.5 px-3 text-[10px] font-bold uppercase tracking-[0.15em] text-slate-700">
+              {section.label}
+            </p>
+            <div className="flex flex-col gap-0.5">
+              {section.items.map(({ href, label, icon: Icon }) => {
+                const active = pathname === href || (href !== '/admin' && pathname.startsWith(href))
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    className={cn(
+                      'group relative flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all duration-100',
+                      active
+                        ? 'text-white'
+                        : 'text-slate-500 hover:bg-white/[0.04] hover:text-slate-300',
+                    )}
+                  >
+                    {active && (
+                      <span className="absolute left-0 top-1/2 h-4 w-[3px] -translate-y-1/2 rounded-r-full bg-violet-500" />
+                    )}
+                    <Icon
+                      size={14}
+                      strokeWidth={active ? 2.5 : 1.5}
+                      className={active ? 'text-violet-400' : 'transition group-hover:text-slate-300'}
+                    />
+                    <span className={cn(active ? 'font-semibold' : 'font-normal')}>{label}</span>
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        ))}
+      </nav>
+
+      {/* User + sign out */}
+      <div className="mt-4 border-t border-white/[0.06] pt-4">
+        <div className="mb-2 flex items-center gap-2.5 px-1">
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-indigo-700 text-[11px] font-bold text-white shadow shadow-violet-900/30">
+            {initials}
+          </div>
+          <div className="min-w-0">
+            <p className="truncate text-xs font-semibold text-white">{user?.name}</p>
+            <p className="truncate text-[10px] text-slate-600">{user?.email}</p>
+          </div>
         </div>
         <button
           onClick={() => signOut({ callbackUrl: '/admin/login' })}
-          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-400 transition hover:bg-red-500/10 hover:text-red-400"
+          className="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-slate-600 transition hover:bg-red-500/10 hover:text-red-400"
         >
-          <LogOut size={16} />
-          Sign Out
+          <LogOut size={12} />
+          Sign out
         </button>
       </div>
     </aside>

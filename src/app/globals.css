@@ -2,14 +2,14 @@
 
 @theme inline {
   /* Fonts */
-  --font-display: "Space Grotesk", sans-serif;
-  --font-body:    "Inter", sans-serif;
+  --font-display: "Syne", sans-serif;
+  --font-body:    "DM Sans", sans-serif;
   --font-mono:    "JetBrains Mono", monospace;
 
   /* Brand colors */
-  --color-bg:           #0F172A;
-  --color-surface:      #1E293B;
-  --color-surface2:     #263249;
+  --color-bg:           #070D1A;
+  --color-surface:      #0C1524;
+  --color-surface2:     #111E34;
   --color-border:       #334155;
   --color-violet:       #7C3AED;
   --color-violet-dark:  #6D28D9;

@@ -1,20 +1,73 @@
 'use client'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import { useEffect } from 'react'
+import Link from '@tiptap/extension-link'
+import Image from '@tiptap/extension-image'
+import Underline from '@tiptap/extension-underline'
+import TextAlign from '@tiptap/extension-text-align'
+import Highlight from '@tiptap/extension-highlight'
+import Placeholder from '@tiptap/extension-placeholder'
+import { useEffect, useState, useCallback } from 'react'
 import { cn } from '@/lib/utils'
 
-const toolbarBtn = 'rounded px-2 py-1 text-xs text-slate-300 hover:bg-white/10 hover:text-white disabled:opacity-30'
-
-export default function RichEditor({
-  value,
-  onChange,
-}: {
+// ─── Types ────────────────────────────────────────────────────────────────────
+interface RichEditorProps {
   value: string
   onChange: (html: string) => void
+  onPreview?: () => void
+  showPreview?: boolean
+}
+
+// ─── Toolbar button helper ─────────────────────────────────────────────────────
+function Btn({
+  active, disabled, onClick, title, children,
+}: {
+  active?: boolean
+  disabled?: boolean
+  onClick: () => void
+  title: string
+  children: React.ReactNode
 }) {
+  return (
+    <button
+      type="button"
+      title={title}
+      disabled={disabled}
+      onClick={onClick}
+      className={cn(
+        'flex h-7 min-w-[28px] items-center justify-center rounded px-1.5 text-xs font-medium transition',
+        active
+          ? 'bg-white/15 text-white'
+          : 'text-slate-400 hover:bg-white/10 hover:text-white',
+        disabled && 'cursor-not-allowed opacity-30',
+      )}
+    >
+      {children}
+    </button>
+  )
+}
+
+function Sep() {
+  return <span className="mx-0.5 h-5 w-px bg-white/10" />
+}
+
+// ─── Main component ────────────────────────────────────────────────────────────
+export default function RichEditor({ value, onChange, onPreview, showPreview }: RichEditorProps) {
+  const [linkUrl, setLinkUrl]         = useState('')
+  const [imageUrl, setImageUrl]       = useState('')
+  const [showLinkInput, setShowLinkInput]   = useState(false)
+  const [showImageInput, setShowImageInput] = useState(false)
+
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [
+      StarterKit,
+      Underline,
+      Highlight.configure({ multicolor: false }),
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      Link.configure({ openOnClick: false, HTMLAttributes: { class: 'text-violet-400 underline' } }),
+      Image.configure({ HTMLAttributes: { class: 'rounded-lg max-w-full my-4' } }),
+      Placeholder.configure({ placeholder: 'Start writing your post…' }),
+    ],
     content: value,
     immediatelyRender: false,
     onUpdate({ editor }) {
@@ -22,75 +75,226 @@ export default function RichEditor({
     },
     editorProps: {
       attributes: {
-        class: 'min-h-[320px] outline-none prose prose-invert max-w-none p-4',
+        class: 'min-h-[520px] outline-none p-5 text-slate-200 leading-relaxed',
       },
     },
   })
 
-  // Sync external value changes (e.g. when editing an existing post)
   useEffect(() => {
     if (editor && value !== editor.getHTML()) {
       editor.commands.setContent(value)
     }
   }, [value, editor])
 
+  const addLink = useCallback(() => {
+    if (!editor || !linkUrl.trim()) return
+    editor.chain().focus().setLink({ href: linkUrl }).run()
+    setLinkUrl('')
+    setShowLinkInput(false)
+  }, [editor, linkUrl])
+
+  const addImage = useCallback(() => {
+    if (!editor || !imageUrl.trim()) return
+    editor.chain().focus().setImage({ src: imageUrl }).run()
+    setImageUrl('')
+    setShowImageInput(false)
+  }, [editor, imageUrl])
+
   if (!editor) return null
 
   return (
-    <div className="overflow-hidden rounded-xl border border-white/10 bg-white/5">
-      {/* Toolbar */}
-      <div className="flex flex-wrap gap-1 border-b border-white/10 bg-white/[0.03] p-2">
-        <button type="button"
-          className={cn(toolbarBtn, editor.isActive('bold') && 'bg-white/10 text-white')}
-          onClick={() => editor.chain().focus().toggleBold().run()}>
-          B
-        </button>
-        <button type="button"
-          className={cn(toolbarBtn, editor.isActive('italic') && 'bg-white/10 text-white')}
-          onClick={() => editor.chain().focus().toggleItalic().run()}>
-          <em>I</em>
-        </button>
-        <button type="button"
-          className={cn(toolbarBtn, editor.isActive('heading', { level: 2 }) && 'bg-white/10 text-white')}
+    <div className="overflow-hidden rounded-xl border border-white/[0.08] bg-[#0C1524]">
+
+      {/* ── Toolbar ── */}
+      <div className="flex flex-wrap items-center gap-0.5 border-b border-white/[0.07] bg-white/[0.025] px-2 py-1.5">
+
+        {/* History */}
+        <Btn title="Undo" onClick={() => editor.chain().focus().undo().run()}
+          disabled={!editor.can().undo()}>
+          ↩
+        </Btn>
+        <Btn title="Redo" onClick={() => editor.chain().focus().redo().run()}
+          disabled={!editor.can().redo()}>
+          ↪
+        </Btn>
+
+        <Sep />
+
+        {/* Headings */}
+        <Btn title="Heading 1" active={editor.isActive('heading', { level: 1 })}
+          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}>
+          H1
+        </Btn>
+        <Btn title="Heading 2" active={editor.isActive('heading', { level: 2 })}
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>
           H2
-        </button>
-        <button type="button"
-          className={cn(toolbarBtn, editor.isActive('heading', { level: 3 }) && 'bg-white/10 text-white')}
+        </Btn>
+        <Btn title="Heading 3" active={editor.isActive('heading', { level: 3 })}
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}>
           H3
-        </button>
-        <span className="mx-1 text-white/20">|</span>
-        <button type="button"
-          className={cn(toolbarBtn, editor.isActive('bulletList') && 'bg-white/10 text-white')}
+        </Btn>
+
+        <Sep />
+
+        {/* Inline marks */}
+        <Btn title="Bold (Ctrl+B)" active={editor.isActive('bold')}
+          onClick={() => editor.chain().focus().toggleBold().run()}>
+          <strong>B</strong>
+        </Btn>
+        <Btn title="Italic (Ctrl+I)" active={editor.isActive('italic')}
+          onClick={() => editor.chain().focus().toggleItalic().run()}>
+          <em>I</em>
+        </Btn>
+        <Btn title="Underline (Ctrl+U)" active={editor.isActive('underline')}
+          onClick={() => editor.chain().focus().toggleUnderline().run()}>
+          <span className="underline">U</span>
+        </Btn>
+        <Btn title="Strikethrough" active={editor.isActive('strike')}
+          onClick={() => editor.chain().focus().toggleStrike().run()}>
+          <span className="line-through">S</span>
+        </Btn>
+        <Btn title="Highlight" active={editor.isActive('highlight')}
+          onClick={() => editor.chain().focus().toggleHighlight().run()}>
+          <span className="rounded bg-yellow-400/30 px-0.5 text-yellow-300">H</span>
+        </Btn>
+        <Btn title="Inline code" active={editor.isActive('code')}
+          onClick={() => editor.chain().focus().toggleCode().run()}>
+          <code className="font-mono">`c`</code>
+        </Btn>
+
+        <Sep />
+
+        {/* Alignment */}
+        <Btn title="Align left" active={editor.isActive({ textAlign: 'left' })}
+          onClick={() => editor.chain().focus().setTextAlign('left').run()}>
+          ≡
+        </Btn>
+        <Btn title="Align center" active={editor.isActive({ textAlign: 'center' })}
+          onClick={() => editor.chain().focus().setTextAlign('center').run()}>
+          ≡
+        </Btn>
+        <Btn title="Align right" active={editor.isActive({ textAlign: 'right' })}
+          onClick={() => editor.chain().focus().setTextAlign('right').run()}>
+          ≡
+        </Btn>
+
+        <Sep />
+
+        {/* Lists & blocks */}
+        <Btn title="Bullet list" active={editor.isActive('bulletList')}
           onClick={() => editor.chain().focus().toggleBulletList().run()}>
           • List
-        </button>
-        <button type="button"
-          className={cn(toolbarBtn, editor.isActive('orderedList') && 'bg-white/10 text-white')}
+        </Btn>
+        <Btn title="Numbered list" active={editor.isActive('orderedList')}
           onClick={() => editor.chain().focus().toggleOrderedList().run()}>
           1. List
-        </button>
-        <button type="button"
-          className={cn(toolbarBtn, editor.isActive('blockquote') && 'bg-white/10 text-white')}
+        </Btn>
+        <Btn title="Block quote" active={editor.isActive('blockquote')}
           onClick={() => editor.chain().focus().toggleBlockquote().run()}>
-          &ldquo; Quote
-        </button>
-        <span className="mx-1 text-white/20">|</span>
-        <button type="button"
-          className={cn(toolbarBtn, editor.isActive('code') && 'bg-white/10 text-white')}
-          onClick={() => editor.chain().focus().toggleCode().run()}>
-          `code`
-        </button>
-        <button type="button"
-          className={cn(toolbarBtn, editor.isActive('codeBlock') && 'bg-white/10 text-white')}
+          ❝
+        </Btn>
+        <Btn title="Code block" active={editor.isActive('codeBlock')}
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}>
-          ```block
-        </button>
+          <code className="font-mono text-[10px]">{'</>'}</code>
+        </Btn>
+        <Btn title="Horizontal rule"
+          onClick={() => editor.chain().focus().setHorizontalRule().run()}>
+          ─
+        </Btn>
+
+        <Sep />
+
+        {/* Link */}
+        <Btn title="Insert link" active={editor.isActive('link') || showLinkInput}
+          onClick={() => { setShowImageInput(false); setShowLinkInput(v => !v) }}>
+          🔗
+        </Btn>
+
+        {/* Image */}
+        <Btn title="Insert image" active={showImageInput}
+          onClick={() => { setShowLinkInput(false); setShowImageInput(v => !v) }}>
+          🖼
+        </Btn>
+
+        {/* Clear formatting */}
+        <Btn title="Clear formatting"
+          onClick={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}>
+          ✕
+        </Btn>
+
+        {/* Preview toggle */}
+        {onPreview && (
+          <>
+            <Sep />
+            <button
+              type="button"
+              onClick={onPreview}
+              className={cn(
+                'flex h-7 items-center gap-1.5 rounded px-2.5 text-xs font-semibold transition',
+                showPreview
+                  ? 'bg-violet-600 text-white'
+                  : 'border border-white/10 text-slate-400 hover:bg-white/10 hover:text-white',
+              )}
+            >
+              {showPreview ? '✎ Edit' : '👁 Preview'}
+            </button>
+          </>
+        )}
       </div>
 
-      {/* Editor area */}
+      {/* ── Link input popup ── */}
+      {showLinkInput && (
+        <div className="flex items-center gap-2 border-b border-white/[0.07] bg-white/[0.02] px-3 py-2">
+          <input
+            autoFocus
+            value={linkUrl}
+            onChange={e => setLinkUrl(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') addLink(); if (e.key === 'Escape') setShowLinkInput(false) }}
+            placeholder="https://..."
+            className="flex-1 rounded bg-white/5 px-3 py-1 text-sm text-white placeholder-slate-600 outline-none focus:ring-1 focus:ring-violet-500"
+          />
+          <button type="button" onClick={addLink}
+            className="rounded bg-violet-600 px-3 py-1 text-xs font-semibold text-white hover:bg-violet-500">
+            Insert
+          </button>
+          <button type="button" onClick={() => setShowLinkInput(false)}
+            className="rounded px-2 py-1 text-xs text-slate-500 hover:text-white">
+            Cancel
+          </button>
+        </div>
+      )}
+
+      {/* ── Image URL input popup ── */}
+      {showImageInput && (
+        <div className="flex items-center gap-2 border-b border-white/[0.07] bg-white/[0.02] px-3 py-2">
+          <input
+            autoFocus
+            value={imageUrl}
+            onChange={e => setImageUrl(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') addImage(); if (e.key === 'Escape') setShowImageInput(false) }}
+            placeholder="Image URL https://..."
+            className="flex-1 rounded bg-white/5 px-3 py-1 text-sm text-white placeholder-slate-600 outline-none focus:ring-1 focus:ring-violet-500"
+          />
+          <button type="button" onClick={addImage}
+            className="rounded bg-violet-600 px-3 py-1 text-xs font-semibold text-white hover:bg-violet-500">
+            Insert
+          </button>
+          <button type="button" onClick={() => setShowImageInput(false)}
+            className="rounded px-2 py-1 text-xs text-slate-500 hover:text-white">
+            Cancel
+          </button>
+        </div>
+      )}
+
+      {/* ── Editor area ── */}
       <EditorContent editor={editor} />
+
+      {/* ── Word count ── */}
+      <div className="flex justify-end border-t border-white/[0.05] px-4 py-1.5">
+        <span className="text-[11px] text-slate-700">
+          {editor.storage.characterCount?.words?.() ?? editor.getText().split(/\s+/).filter(Boolean).length} words
+        </span>
+      </div>
     </div>
   )
 }

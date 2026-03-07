@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Post, Series, Chapter } from '@/types'
 import RichEditor from '@/components/admin/RichEditor'
+import ImagePickerModal from '@/components/admin/ImagePickerModal'
 import { slugify } from '@/lib/utils'
 
 type PostFormProps = {
@@ -23,6 +24,7 @@ export default function PostForm({ initialData = {}, allSeries }: PostFormProps)
   const [category, setCategory]     = useState(initialData.category ?? '')
   const [excerpt, setExcerpt]       = useState(initialData.excerpt ?? '')
   const [coverImage, setCoverImage] = useState(initialData.coverImage ?? '')
+  const [showCoverPicker, setShowCoverPicker] = useState(false)
   const [content, setContent]       = useState(initialData.content ?? '')
   const [published, setPublished]   = useState(initialData.published ?? false)
   const [saving, setSaving]         = useState(false)
@@ -230,18 +232,33 @@ export default function PostForm({ initialData = {}, allSeries }: PostFormProps)
               </select>
             </div>
             <div>
-              <label className="mb-1 block text-xs text-slate-600">Cover Image URL</label>
-              <input
-                value={coverImage}
-                onChange={e => setCoverImage(e.target.value)}
-                placeholder="https://..."
-                className="input-style text-xs"
-              />
+              <label className="mb-1 block text-xs text-slate-600">Cover Image</label>
+              <div className="flex gap-2">
+                <input
+                  value={coverImage}
+                  onChange={e => setCoverImage(e.target.value)}
+                  placeholder="https://..."
+                  className="input-style flex-1 text-xs"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowCoverPicker(true)}
+                  className="shrink-0 rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-slate-400 transition hover:bg-violet-600/20 hover:border-violet-500/50 hover:text-violet-300"
+                >
+                  🖼 Browse
+                </button>
+              </div>
               {coverImage && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={coverImage} alt="cover preview" className="mt-2 w-full rounded-lg object-cover" style={{ maxHeight: 120 }} />
               )}
             </div>
+            {showCoverPicker && (
+              <ImagePickerModal
+                onInsert={(url) => { setCoverImage(url); setShowCoverPicker(false) }}
+                onClose={() => setShowCoverPicker(false)}
+              />
+            )}
           </div>
         </div>
 

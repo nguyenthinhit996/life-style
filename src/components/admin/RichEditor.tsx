@@ -21,7 +21,9 @@ import Underline from '@tiptap/extension-underline'
 import TextAlign from '@tiptap/extension-text-align'
 import Highlight from '@tiptap/extension-highlight'
 import Placeholder from '@tiptap/extension-placeholder'
-import { useEffect, useState, useCallback } from 'react'
+import Color from '@tiptap/extension-color'
+import { TextStyle } from '@tiptap/extension-text-style'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { cn } from '@/lib/utils'
 import ImagePickerModal from '@/components/admin/ImagePickerModal'
 
@@ -68,14 +70,18 @@ function Sep() {
 
 // ─── Main component ────────────────────────────────────────────────────────────
 export default function RichEditor({ value, onChange, onPreview, showPreview }: RichEditorProps) {
-  const [linkUrl, setLinkUrl]             = useState('')
+  const [linkUrl, setLinkUrl]               = useState('')
   const [showLinkInput, setShowLinkInput]   = useState(false)
   const [showImagePicker, setShowImagePicker] = useState(false)
+  const [showColorPicker, setShowColorPicker] = useState(false)
+  const colorPickerRef = useRef<HTMLDivElement>(null)
 
   const editor = useEditor({
     extensions: [
       StarterKit,
       Underline,
+      TextStyle,
+      Color,
       Highlight.configure({ multicolor: false }),
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       Link.configure({ openOnClick: false, HTMLAttributes: { class: 'text-violet-400 underline' } }),
@@ -112,6 +118,32 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
     const widths = { small: '30%', medium: '55%', large: '80%', full: '100%' }
     editor.chain().focus().setImage({ src: url, width: widths[size] } as any).run()
   }, [editor])
+
+  // Close color picker when clicking outside
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (colorPickerRef.current && !colorPickerRef.current.contains(e.target as Node)) {
+        setShowColorPicker(false)
+      }
+    }
+    if (showColorPicker) document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [showColorPicker])
+
+  const COLORS = [
+    { label: 'Default',   value: '' },
+    { label: 'White',     value: '#ffffff' },
+    { label: 'Slate',     value: '#94a3b8' },
+    { label: 'Red',       value: '#f87171' },
+    { label: 'Orange',    value: '#fb923c' },
+    { label: 'Yellow',    value: '#facc15' },
+    { label: 'Green',     value: '#4ade80' },
+    { label: 'Teal',      value: '#2dd4bf' },
+    { label: 'Blue',      value: '#60a5fa' },
+    { label: 'Violet',    value: '#a78bfa' },
+    { label: 'Pink',      value: '#f472b6' },
+    { label: 'Rose',      value: '#fb7185' },
+  ]
 
   if (!editor) return null
 
@@ -174,6 +206,47 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
             <span className="absolute bottom-0 left-0 right-0 h-[5px] rounded-sm bg-yellow-400/70" />
           </span>
         </Btn>
+
+        {/* Text color */}
+        <div ref={colorPickerRef} className="relative">
+          <button
+            type="button"
+            title="Text color"
+            onClick={() => setShowColorPicker(v => !v)}
+            className={cn(
+              'flex h-7 min-w-[28px] flex-col items-center justify-center rounded px-1.5 transition',
+              showColorPicker ? 'bg-white/15 text-white' : 'text-slate-400 hover:bg-white/10 hover:text-white',
+            )}
+          >
+            <span className="text-xs font-bold leading-none">A</span>
+            <span
+              className="mt-0.5 h-[3px] w-4 rounded-full"
+              style={{ backgroundColor: (editor.getAttributes('textStyle').color as string) || '#ffffff' }}
+            />
+          </button>
+          {showColorPicker && (
+            <div className="absolute left-0 top-full z-20 mt-1.5 grid grid-cols-6 gap-1 rounded-xl border border-white/[0.1] bg-[#0e1829] p-2.5 shadow-xl">
+              {COLORS.map(c => (
+                <button
+                  key={c.value}
+                  type="button"
+                  title={c.label}
+                  onClick={() => {
+                    if (!c.value) editor.chain().focus().unsetColor().run()
+                    else editor.chain().focus().setColor(c.value).run()
+                    setShowColorPicker(false)
+                  }}
+                  className={cn(
+                    'h-5 w-5 rounded-md border transition hover:scale-110',
+                    c.value === '' ? 'border-white/20 bg-gradient-to-br from-slate-600 to-slate-800' : 'border-white/10',
+                  )}
+                  style={c.value ? { backgroundColor: c.value } : {}}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
         <Btn title="Inline code" active={editor.isActive('code')}
           onClick={() => editor.chain().focus().toggleCode().run()}>
           <code className="font-mono">`c`</code>

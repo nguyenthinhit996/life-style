@@ -4,6 +4,20 @@ import postsData    from '../../../db/posts.json'
 import usersData    from '../../../db/users.json'
 import aboutData    from '../../../db/about.json'
 import type { Series, Chapter, Post, User } from '@/types'
+import fs   from 'fs'
+import path from 'path'
+
+// ── DB file paths ─────────────────────────────────────────
+const DB = {
+  posts:    path.resolve(process.cwd(), 'db/posts.json'),
+  series:   path.resolve(process.cwd(), 'db/series.json'),
+  chapters: path.resolve(process.cwd(), 'db/chapters.json'),
+  about:    path.resolve(process.cwd(), 'db/about.json'),
+}
+
+function persist(file: string, data: unknown) {
+  fs.writeFileSync(file, JSON.stringify(data, null, 2), 'utf-8')
+}
 
 // ── Shared in-memory store via globalThis ─────────────────
 // Next.js runs Server Components and API Routes in separate module registries
@@ -94,6 +108,7 @@ export async function getSeriesTree(seriesId: string) {
 export async function createPost(data: Omit<Post, 'id'>): Promise<Post> {
   const post: Post = { id: Date.now().toString(), ...data } as Post
   posts.push(post)
+  persist(DB.posts, posts)
   return post
 }
 
@@ -101,6 +116,7 @@ export async function updatePost(id: string, data: Partial<Post>): Promise<Post 
   const idx = posts.findIndex(p => p.id === id)
   if (idx === -1) return null
   posts[idx] = { ...posts[idx], ...data, id }
+  persist(DB.posts, posts)
   return posts[idx]
 }
 
@@ -108,6 +124,7 @@ export async function deletePost(id: string): Promise<boolean> {
   const idx = posts.findIndex(p => p.id === id)
   if (idx === -1) return false
   posts.splice(idx, 1)
+  persist(DB.posts, posts)
   return true
 }
 
@@ -119,6 +136,7 @@ export async function getPostById(id: string): Promise<Post | undefined> {
 export async function createSeries(data: Omit<Series, 'id'>): Promise<Series> {
   const item: Series = { id: Date.now().toString(), ...data } as Series
   series.push(item)
+  persist(DB.series, series)
   return item
 }
 
@@ -126,6 +144,7 @@ export async function updateSeries(id: string, data: Partial<Series>): Promise<S
   const idx = series.findIndex(s => s.id === id)
   if (idx === -1) return null
   series[idx] = { ...series[idx], ...data, id }
+  persist(DB.series, series)
   return series[idx]
 }
 
@@ -133,6 +152,7 @@ export async function deleteSeries(id: string): Promise<boolean> {
   const idx = series.findIndex(s => s.id === id)
   if (idx === -1) return false
   series.splice(idx, 1)
+  persist(DB.series, series)
   return true
 }
 
@@ -140,6 +160,7 @@ export async function deleteSeries(id: string): Promise<boolean> {
 export async function createChapter(data: Omit<Chapter, 'id'>): Promise<Chapter> {
   const item: Chapter = { id: Date.now().toString(), ...data } as Chapter
   chapters.push(item)
+  persist(DB.chapters, chapters)
   return item
 }
 
@@ -147,6 +168,7 @@ export async function updateChapter(id: string, data: Partial<Chapter>): Promise
   const idx = chapters.findIndex(c => c.id === id)
   if (idx === -1) return null
   chapters[idx] = { ...chapters[idx], ...data, id }
+  persist(DB.chapters, chapters)
   return chapters[idx]
 }
 
@@ -154,6 +176,7 @@ export async function deleteChapter(id: string): Promise<boolean> {
   const idx = chapters.findIndex(c => c.id === id)
   if (idx === -1) return false
   chapters.splice(idx, 1)
+  persist(DB.chapters, chapters)
   return true
 }
 
@@ -174,5 +197,6 @@ export async function getAbout() {
 
 export async function updateAbout(data: typeof aboutData) {
   globalThis._mockAbout = { ...globalThis._mockAbout!, ...data }
+  persist(DB.about, globalThis._mockAbout)
   return globalThis._mockAbout
 }

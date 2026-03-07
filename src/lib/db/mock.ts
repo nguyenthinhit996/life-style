@@ -5,10 +5,29 @@ import usersData    from '../../../db/users.json'
 import aboutData    from '../../../db/about.json'
 import type { Series, Chapter, Post, User } from '@/types'
 
-const series: Series[]    = seriesData   as Series[]
-const chapters: Chapter[] = chaptersData as Chapter[]
-const posts: Post[]       = postsData    as Post[]
-const users: User[]       = usersData    as User[]
+// ── Shared in-memory store via globalThis ─────────────────
+// Next.js runs Server Components and API Routes in separate module registries
+// in development. Using globalThis ensures all contexts share the same arrays.
+declare global {
+  // eslint-disable-next-line no-var
+  var _mockSeries:   Series[]   | undefined
+  // eslint-disable-next-line no-var
+  var _mockChapters: Chapter[]  | undefined
+  // eslint-disable-next-line no-var
+  var _mockPosts:    Post[]     | undefined
+  // eslint-disable-next-line no-var
+  var _mockAbout:    typeof aboutData | undefined
+}
+
+if (!globalThis._mockSeries)   globalThis._mockSeries   = seriesData   as Series[]
+if (!globalThis._mockChapters) globalThis._mockChapters = chaptersData as Chapter[]
+if (!globalThis._mockPosts)    globalThis._mockPosts    = postsData    as Post[]
+if (!globalThis._mockAbout)    globalThis._mockAbout    = { ...aboutData }
+
+const series   = globalThis._mockSeries
+const chapters = globalThis._mockChapters
+const posts    = globalThis._mockPosts
+const users: User[] = usersData as User[]
 
 // ── Series ────────────────────────────────────────────────
 export async function getSeries(): Promise<Series[]> {
@@ -149,13 +168,11 @@ export async function getChapters(): Promise<Chapter[]> {
 }
 
 // ── About (mutable in-memory store) ───────────────────────
-let aboutStore = { ...aboutData }
-
 export async function getAbout() {
-  return aboutStore
+  return globalThis._mockAbout!
 }
 
 export async function updateAbout(data: typeof aboutData) {
-  aboutStore = { ...aboutStore, ...data }
-  return aboutStore
+  globalThis._mockAbout = { ...globalThis._mockAbout!, ...data }
+  return globalThis._mockAbout
 }

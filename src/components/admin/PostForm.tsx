@@ -55,7 +55,7 @@ export default function PostForm({ initialData = {}, allSeries }: PostFormProps)
     const method = isEdit ? 'PUT' : 'POST'
     await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
     setSaving(false)
-    router.push('/admin/posts')
+    window.location.href = '/admin/posts'
   }
 
   const wordCount = content.replace(/<[^>]+>/g, '').split(/\s+/).filter(Boolean).length

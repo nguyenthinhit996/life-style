@@ -58,6 +58,7 @@ export default function SeriesForm({ initialData = {} }: { initialData?: Partial
         <input
           value={title}
           onChange={e => { setTitle(e.target.value); if (!isEdit) setSlug(slugify(e.target.value)) }}
+          placeholder="Series title…"
           className="input-style"
         />
       </Field>

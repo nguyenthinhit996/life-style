@@ -1,0 +1,10 @@
+[
+  {
+    "id": "admin-peter",
+    "email": "peter@lifestyle.dev",
+    "password": "$2b$10$q8Sd90AdgfpeK9YCxIbCvOWhyi4LvXlDVdEjGjM3UB/0fhIH.Q78q",
+    "name": "Peter",
+    "role": "admin",
+    "createdAt": "2026-01-01T00:00:00Z"
+  }
+]

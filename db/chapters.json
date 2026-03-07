@@ -1,0 +1,106 @@
+[
+  {
+    "id": "jf-ch1",
+    "seriesId": "java-fundamentals",
+    "title": "Getting Started with Java",
+    "description": "Set up your environment and write your very first Java program.",
+    "order": 1,
+    "totalLessons": 4
+  },
+  {
+    "id": "jf-ch2",
+    "seriesId": "java-fundamentals",
+    "title": "Variables & Data Types",
+    "description": "Understand how Java stores and manages data in memory.",
+    "order": 2,
+    "totalLessons": 4
+  },
+  {
+    "id": "jf-ch3",
+    "seriesId": "java-fundamentals",
+    "title": "Operators & Expressions",
+    "description": "Perform calculations, comparisons, and logical operations.",
+    "order": 3,
+    "totalLessons": 4
+  },
+  {
+    "id": "jf-ch4",
+    "seriesId": "java-fundamentals",
+    "title": "Control Flow",
+    "description": "Control the logic and flow of your Java programs.",
+    "order": 4,
+    "totalLessons": 5
+  },
+  {
+    "id": "jf-ch5",
+    "seriesId": "java-fundamentals",
+    "title": "Methods & Functions",
+    "description": "Write reusable blocks of code with methods.",
+    "order": 5,
+    "totalLessons": 4
+  },
+  {
+    "id": "jf-ch6",
+    "seriesId": "java-fundamentals",
+    "title": "Object-Oriented Programming (OOP)",
+    "description": "Master the four pillars of OOP: encapsulation, inheritance, polymorphism, and abstraction.",
+    "order": 6,
+    "totalLessons": 6
+  },
+  {
+    "id": "ew-ch1",
+    "seriesId": "english-writing-basics",
+    "title": "Sentence Structure",
+    "description": "Learn how to build clear and correct English sentences.",
+    "order": 1,
+    "totalLessons": 4
+  },
+  {
+    "id": "ew-ch2",
+    "seriesId": "english-writing-basics",
+    "title": "Paragraph Writing",
+    "description": "Structure your ideas into coherent paragraphs.",
+    "order": 2,
+    "totalLessons": 4
+  },
+  {
+    "id": "ew-ch3",
+    "seriesId": "english-writing-basics",
+    "title": "Essay Writing",
+    "description": "Compose well-structured academic and personal essays.",
+    "order": 3,
+    "totalLessons": 4
+  },
+  {
+    "id": "ew-ch4",
+    "seriesId": "english-writing-basics",
+    "title": "Common Grammar Mistakes",
+    "description": "Identify and fix the most frequent grammar errors.",
+    "order": 4,
+    "totalLessons": 4
+  },
+
+  { "id": "js-ch1", "seriesId": "javascript-fundamentals", "title": "Intro to JavaScript", "description": "What JavaScript is, where it runs, and how to write your first script in the browser.", "order": 1, "totalLessons": 4 },
+  { "id": "js-ch2", "seriesId": "javascript-fundamentals", "title": "Variables, Types & Operators", "description": "let, const, var — data types, type coercion, and operators.", "order": 2, "totalLessons": 4 },
+  { "id": "js-ch3", "seriesId": "javascript-fundamentals", "title": "Functions & Scope", "description": "Function declarations, expressions, arrow functions, closures, and scope chains.", "order": 3, "totalLessons": 4 },
+  { "id": "js-ch4", "seriesId": "javascript-fundamentals", "title": "Arrays & Objects", "description": "Work with collections, destructuring, spread/rest, and object methods.", "order": 4, "totalLessons": 4 },
+  { "id": "js-ch5", "seriesId": "javascript-fundamentals", "title": "DOM & Browser APIs", "description": "Select elements, handle events, and manipulate the page dynamically.", "order": 5, "totalLessons": 4 },
+  { "id": "js-ch6", "seriesId": "javascript-fundamentals", "title": "Async JavaScript", "description": "Callbacks, Promises, async/await, and the event loop explained clearly.", "order": 6, "totalLessons": 4 },
+
+  { "id": "py-ch1", "seriesId": "python-for-beginners", "title": "Getting Started with Python", "description": "Install Python, run your first script, and understand the Python ecosystem.", "order": 1, "totalLessons": 4 },
+  { "id": "py-ch2", "seriesId": "python-for-beginners", "title": "Core Data Types & Variables", "description": "Integers, floats, strings, booleans, and None — how Python stores data.", "order": 2, "totalLessons": 4 },
+  { "id": "py-ch3", "seriesId": "python-for-beginners", "title": "Control Flow & Loops", "description": "if/elif/else, for loops, while loops, and list comprehensions.", "order": 3, "totalLessons": 4 },
+  { "id": "py-ch4", "seriesId": "python-for-beginners", "title": "Functions & Modules", "description": "Define functions, use default args, *args/**kwargs, and import modules.", "order": 4, "totalLessons": 4 },
+  { "id": "py-ch5", "seriesId": "python-for-beginners", "title": "Lists, Dicts & File I/O", "description": "Work with Python's most-used data structures and read/write files.", "order": 5, "totalLessons": 4 },
+
+  { "id": "ai-ch1", "seriesId": "ai-ml-basics", "title": "What is AI & Machine Learning?", "description": "Understand the difference between AI, ML, and Deep Learning. Where does it actually run?", "order": 1, "totalLessons": 4 },
+  { "id": "ai-ch2", "seriesId": "ai-ml-basics", "title": "Data & Features", "description": "How ML models learn from data. Features, labels, datasets, and cleaning.", "order": 2, "totalLessons": 4 },
+  { "id": "ai-ch3", "seriesId": "ai-ml-basics", "title": "Supervised Learning", "description": "Linear regression, logistic regression, decision trees — with Python examples.", "order": 3, "totalLessons": 5 },
+  { "id": "ai-ch4", "seriesId": "ai-ml-basics", "title": "Neural Networks & Deep Learning", "description": "How neural networks work: layers, weights, activation functions, and training.", "order": 4, "totalLessons": 5 },
+  { "id": "ai-ch5", "seriesId": "ai-ml-basics", "title": "Working with LLMs & APIs", "description": "Use OpenAI, Gemini, and open-source LLMs. Prompt engineering and API integration.", "order": 5, "totalLessons": 4 },
+
+  { "id": "efd-ch1", "seriesId": "english-for-developers", "title": "Writing Code Comments & Docstrings", "description": "How to write clear, helpful comments that make your code self-documenting.", "order": 1, "totalLessons": 3 },
+  { "id": "efd-ch2", "seriesId": "english-for-developers", "title": "README & Documentation", "description": "Structure a great README. Write docs that developers actually want to read.", "order": 2, "totalLessons": 4 },
+  { "id": "efd-ch3", "seriesId": "english-for-developers", "title": "Commit Messages & PR Descriptions", "description": "Write meaningful git commit messages and pull request descriptions.", "order": 3, "totalLessons": 3 },
+  { "id": "efd-ch4", "seriesId": "english-for-developers", "title": "Dev Team Communication", "description": "Slack messages, code review feedback, stand-up updates — communicate like a senior dev.", "order": 4, "totalLessons": 4 }
+]

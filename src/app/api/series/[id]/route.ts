@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
+import { updateSeries, deleteSeries } from '@/lib/db'
 
 export async function PUT(
   req: Request,
@@ -9,8 +10,9 @@ export async function PUT(
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   const { id } = await params
   const body = await req.json()
-  // TODO Phase 7: update in Firestore
-  return NextResponse.json({ id, ...body })
+  const item = await updateSeries(id, body)
+  if (!item) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  return NextResponse.json(item)
 }
 
 export async function DELETE(
@@ -20,6 +22,7 @@ export async function DELETE(
   const session = await auth()
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   const { id } = await params
-  // TODO Phase 7: delete from Firestore
+  const ok = await deleteSeries(id)
+  if (!ok) return NextResponse.json({ error: 'Not found' }, { status: 404 })
   return NextResponse.json({ deleted: id })
 }

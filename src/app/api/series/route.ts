@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { getSeries } from '@/lib/db'
+import { getSeries, createSeries } from '@/lib/db'
 
 export async function GET() {
   const series = await getSeries()
@@ -11,6 +11,6 @@ export async function POST(req: Request) {
   const session = await auth()
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   const body = await req.json()
-  // TODO Phase 7: write to Firestore
-  return NextResponse.json({ ...body, id: Date.now().toString() }, { status: 201 })
+  const item = await createSeries(body)
+  return NextResponse.json(item, { status: 201 })
 }

@@ -96,6 +96,48 @@ export async function getPostById(id: string): Promise<Post | undefined> {
   return posts.find(p => p.id === id)
 }
 
+// ── Series mutations ─────────────────────────────────────
+export async function createSeries(data: Omit<Series, 'id'>): Promise<Series> {
+  const item: Series = { id: Date.now().toString(), ...data } as Series
+  series.push(item)
+  return item
+}
+
+export async function updateSeries(id: string, data: Partial<Series>): Promise<Series | null> {
+  const idx = series.findIndex(s => s.id === id)
+  if (idx === -1) return null
+  series[idx] = { ...series[idx], ...data, id }
+  return series[idx]
+}
+
+export async function deleteSeries(id: string): Promise<boolean> {
+  const idx = series.findIndex(s => s.id === id)
+  if (idx === -1) return false
+  series.splice(idx, 1)
+  return true
+}
+
+// ── Chapter mutations ─────────────────────────────────────
+export async function createChapter(data: Omit<Chapter, 'id'>): Promise<Chapter> {
+  const item: Chapter = { id: Date.now().toString(), ...data } as Chapter
+  chapters.push(item)
+  return item
+}
+
+export async function updateChapter(id: string, data: Partial<Chapter>): Promise<Chapter | null> {
+  const idx = chapters.findIndex(c => c.id === id)
+  if (idx === -1) return null
+  chapters[idx] = { ...chapters[idx], ...data, id }
+  return chapters[idx]
+}
+
+export async function deleteChapter(id: string): Promise<boolean> {
+  const idx = chapters.findIndex(c => c.id === id)
+  if (idx === -1) return false
+  chapters.splice(idx, 1)
+  return true
+}
+
 // ── Auth ──────────────────────────────────────────────────
 export async function getUserByEmail(email: string): Promise<User | undefined> {
   return users.find(u => u.email === email)
@@ -106,7 +148,14 @@ export async function getChapters(): Promise<Chapter[]> {
   return chapters
 }
 
-// ── About ─────────────────────────────────────────────────
+// ── About (mutable in-memory store) ───────────────────────
+let aboutStore = { ...aboutData }
+
 export async function getAbout() {
-  return aboutData
+  return aboutStore
+}
+
+export async function updateAbout(data: typeof aboutData) {
+  aboutStore = { ...aboutStore, ...data }
+  return aboutStore
 }

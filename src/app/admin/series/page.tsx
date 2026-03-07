@@ -1,9 +1,26 @@
-import { getSeries } from '@/lib/db'
+'use client'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import type { Series } from '@/types'
 import Badge from '@/components/admin/Badge'
+import ConfirmDialog from '@/components/admin/ConfirmDialog'
 
-export default async function AdminSeriesPage() {
-  const series = await getSeries()
+export default function AdminSeriesPage() {
+  const router = useRouter()
+  const [series, setSeries]     = useState<Series[]>([])
+  const [confirmId, setConfirmId] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch('/api/series').then(r => r.json()).then(setSeries)
+  }, [])
+
+  async function handleDelete(id: string) {
+    await fetch(`/api/series/${id}`, { method: 'DELETE' })
+    setConfirmId(null)
+    setSeries(prev => prev.filter(s => s.id !== id))
+  }
+
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
@@ -39,19 +56,32 @@ export default async function AdminSeriesPage() {
                     {s.published ? 'Published' : 'Draft'}
                   </Badge>
                 </td>
-                <td className="px-4 py-3">
+                <td className="flex gap-2 px-4 py-3">
                   <Link
                     href={`/admin/series/${s.id}/edit`}
                     className="rounded px-2 py-1 text-xs text-slate-400 hover:bg-white/10 hover:text-white"
                   >
                     Edit
                   </Link>
+                  <button
+                    onClick={() => setConfirmId(s.id)}
+                    className="rounded px-2 py-1 text-xs text-red-400 hover:bg-red-500/10"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      <ConfirmDialog
+        open={!!confirmId}
+        message="Delete this series? This cannot be undone."
+        onConfirm={() => confirmId && handleDelete(confirmId)}
+        onCancel={() => setConfirmId(null)}
+      />
     </div>
   )
 }

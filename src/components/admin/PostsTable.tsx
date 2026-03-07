@@ -1,16 +1,19 @@
 'use client'
 import Link from 'next/link'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import type { Post } from '@/types'
 import Badge from '@/components/admin/Badge'
 import ConfirmDialog from '@/components/admin/ConfirmDialog'
 
 export default function PostsTable({ posts }: { posts: Post[] }) {
+  const router = useRouter()
   const [confirmId, setConfirmId] = useState<string | null>(null)
 
   async function handleDelete(id: string) {
     await fetch(`/api/posts/${id}`, { method: 'DELETE' })
     setConfirmId(null)
+    router.refresh()
   }
 
   return (

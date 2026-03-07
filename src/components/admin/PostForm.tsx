@@ -1,6 +1,42 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
+import { common, createLowlight } from 'lowlight'
+
+const lowlight = createLowlight(common)
+
+function hastToHtml(node: any): string {
+  if (!node) return ''
+  if (node.type === 'text') {
+    return node.value
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  }
+  if (node.type === 'element') {
+    const cls = (node.properties?.className as string[] | undefined)?.join(' ') ?? ''
+    const inner = (node.children ?? []).map(hastToHtml).join('')
+    return `<span${cls ? ` class="${cls}"` : ''}>${inner}</span>`
+  }
+  if (node.type === 'root') return (node.children ?? []).map(hastToHtml).join('')
+  return ''
+}
+
+function applyHighlighting(html: string): string {
+  return html.replace(
+    /<pre><code(?: class="language-([^"]*)")?>([\s\S]*?)<\/code><\/pre>/g,
+    (_, lang: string | undefined, raw: string = '') => {
+      const code = raw
+        .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+      try {
+        const tree = lang ? lowlight.highlight(lang, code) : lowlight.highlightAuto(code)
+        const highlighted = hastToHtml(tree)
+        return `<pre><code${lang ? ` class="language-${lang}"` : ''}>${highlighted}</code></pre>`
+      } catch {
+        return `<pre><code${lang ? ` class="language-${lang}"` : ''}>${raw}</code></pre>`
+      }
+    },
+  )
+}
 import type { Post, Series, Chapter } from '@/types'
 import RichEditor from '@/components/admin/RichEditor'
 import ImagePickerModal from '@/components/admin/ImagePickerModal'
@@ -29,6 +65,11 @@ export default function PostForm({ initialData = {}, allSeries }: PostFormProps)
   const [published, setPublished]   = useState(initialData.published ?? false)
   const [saving, setSaving]         = useState(false)
   const [preview, setPreview]       = useState(false)
+
+  const highlightedContent = useMemo(
+    () => (content ? applyHighlighting(content) : ''),
+    [content],
+  )
 
   useEffect(() => {
     if (!isEdit) setSlug(slugify(title))
@@ -132,7 +173,7 @@ export default function PostForm({ initialData = {}, allSeries }: PostFormProps)
                   prose-pre:bg-[#0d1117] prose-pre:border prose-pre:border-white/[0.07] prose-pre:rounded-xl
                   [&_pre_code]:bg-transparent [&_pre_code]:text-[#e6edf3] [&_pre_code]:px-0
                   prose-img:rounded-xl"
-                dangerouslySetInnerHTML={{ __html: content || '<p class="text-slate-600">Nothing written yet…</p>' }}
+                dangerouslySetInnerHTML={{ __html: highlightedContent || '<p class="text-slate-600">Nothing written yet…</p>' }}
               />
             </div>
           )}

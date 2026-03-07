@@ -167,9 +167,12 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
           onClick={() => editor.chain().focus().toggleStrike().run()}>
           <span className="line-through">S</span>
         </Btn>
-        <Btn title="Highlight" active={editor.isActive('highlight')}
+        <Btn title="Highlight text (marker)" active={editor.isActive('highlight')}
           onClick={() => editor.chain().focus().toggleHighlight().run()}>
-          <span className="rounded bg-yellow-400/30 px-0.5 text-yellow-300">H</span>
+          <span className="relative inline-flex items-center font-bold italic">
+            <span className="relative z-10 px-0.5 text-[11px]">A</span>
+            <span className="absolute bottom-0 left-0 right-0 h-[5px] rounded-sm bg-yellow-400/70" />
+          </span>
         </Btn>
         <Btn title="Inline code" active={editor.isActive('code')}
           onClick={() => editor.chain().focus().toggleCode().run()}>

@@ -3,8 +3,8 @@
 > **Purpose:** Granular, ordered action list for each phase.  
 > This file is the single source of truth during coding — check it before every action to avoid hallucination, duplicating work, or skipping steps.
 >
-> **Current state:** Docs + mock DB only. No Next.js app exists yet.  
-> **Next action: Phase 0, Step 1** — run the scaffold command.
+> **Current state:** Phase 0 ✅ + Phase 1 ✅ complete. Next.js 16.1.6 app running with types, mock data layer, and utils.  
+> **Next action: Phase 2** — Auth (NextAuth v5 Credentials).
 
 ---
 
@@ -34,7 +34,7 @@
 
 ## Phase 0 — Project Scaffold
 
-**Status: NOT STARTED**  
+**Status: ✅ DONE**  
 **Goal:** Create a working Next.js app skeleton with all dependencies installed.
 
 ### Step 0.1 — Run create-next-app
@@ -150,7 +150,7 @@ git commit -m "chore: scaffold Next.js app + install dependencies"
 
 ## Phase 1 — Types + Data Layer
 
-**Status: NOT STARTED**  
+**Status: ✅ DONE**  
 **Goal:** Create the TypeScript types and mock data functions so any page can call `getPosts()`, `getSeries()` etc.  
 **Prerequisite:** Phase 0 complete.
 

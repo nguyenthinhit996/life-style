@@ -13,7 +13,7 @@ Phase 1 — Data Layer        ████████████ ✅ DONE
 Phase 2 — Auth              ████████████ ✅ DONE
 Phase 3 — Admin Dashboard   ████████████ ✅ DONE
 Phase 3+ — Enhancements     ████████████ ✅ DONE
-Phase 4 — Public Website    ░░░░░░░░░░░░ 🔴 NOT STARTED  ← NEXT
+Phase 4 — Public Website    ██░░░░░░░░░░ 🟡 IN PROGRESS  ← NEXT
 Phase 5 — Design Polish     ░░░░░░░░░░░░ 🔴 NOT STARTED
 Phase 6 — Firebase          ░░░░░░░░░░░░ ⏳ FUTURE
 Phase 7 — Deployment        ░░░░░░░░░░░░ ⏳ FUTURE
@@ -75,6 +75,24 @@ Phase 7 — Deployment        ░░░░░░░░░░░░ ⏳ FUTURE
 - [x] `src/app/api/series/route.ts` + `[id]/route.ts`
 - [x] `src/app/api/chapters/route.ts` + `[id]/route.ts`
 - [x] `src/app/api/about/route.ts`
+
+---
+
+## Phase 4 — Public Website 🟡 IN PROGRESS
+
+### Step 4.1 — Public Layout Shell ✅
+- [x] `src/app/(public)/layout.tsx` — wraps children with Navbar + Footer
+- [x] `src/components/public/Navbar.tsx` — sticky, blur, gradient logo, active link highlight, mobile hamburger
+- [x] `src/components/public/Footer.tsx` — brand tagline, nav links, GitHub icon, year
+
+### Remaining Steps
+- [ ] `src/app/(public)/page.tsx` — Home page (Hero · Categories · Featured Posts · About Teaser)
+- [ ] `src/app/(public)/blog/page.tsx` — Blog listing + filter pills + search
+- [ ] `src/app/(public)/about/page.tsx` — About page
+- [ ] `src/app/(public)/blog/[slug]/page.tsx` — Standalone blog post reader
+- [ ] `src/app/(public)/blog/series/[seriesId]/page.tsx` — Series detail + ChapterTree
+- [ ] `src/app/(public)/blog/series/[seriesId]/[chapterId]/[slug]/page.tsx` — Lesson reader
+- [ ] `src/app/not-found.tsx` — 404 page
 
 ---
 

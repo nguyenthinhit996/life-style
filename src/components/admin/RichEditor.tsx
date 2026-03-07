@@ -225,7 +225,7 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
             />
           </button>
           {showColorPicker && (
-            <div className="absolute left-0 top-full z-20 mt-1.5 grid grid-cols-6 gap-1 rounded-xl border border-white/[0.1] bg-[#0e1829] p-2.5 shadow-xl">
+            <div className="absolute left-0 top-full z-20 mt-1.5 grid grid-cols-4 gap-2 rounded-xl border border-white/[0.1] bg-[#0e1829] p-3 shadow-xl">
               {COLORS.map(c => (
                 <button
                   key={c.value}
@@ -237,7 +237,7 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
                     setShowColorPicker(false)
                   }}
                   className={cn(
-                    'h-5 w-5 rounded-md border transition hover:scale-110',
+                    'h-7 w-7 rounded-lg border-2 transition hover:scale-110 hover:border-white/40',
                     c.value === '' ? 'border-white/20 bg-gradient-to-br from-slate-600 to-slate-800' : 'border-white/10',
                   )}
                   style={c.value ? { backgroundColor: c.value } : {}}

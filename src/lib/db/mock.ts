@@ -76,6 +76,11 @@ export async function getUserByEmail(email: string): Promise<User | undefined> {
   return users.find(u => u.email === email)
 }
 
+// ── Chapters (all) ────────────────────────────────────────
+export async function getChapters(): Promise<Chapter[]> {
+  return chapters
+}
+
 // ── About ─────────────────────────────────────────────────
 export async function getAbout() {
   return aboutData

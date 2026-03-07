@@ -52,14 +52,19 @@ export default function Sidebar({ user }: { user: any }) {
 
       {/* Grouped navigation */}
       <nav className="flex flex-1 flex-col gap-5">
-        {navSections.map(section => (
+        {(() => {
+          const allHrefs = navSections.flatMap(s => s.items.map(i => i.href))
+          const hasExactMatch = allHrefs.includes(pathname)
+          return navSections.map(section => (
           <div key={section.label}>
             <p className="mb-1.5 px-3 text-[10px] font-bold uppercase tracking-[0.15em] text-slate-700">
               {section.label}
             </p>
             <div className="flex flex-col gap-0.5">
               {section.items.map(({ href, label, icon: Icon }) => {
-                const active = pathname === href || (href !== '/admin' && pathname.startsWith(href))
+                const active =
+                  pathname === href ||
+                  (!hasExactMatch && href !== '/admin' && pathname.startsWith(href + '/'))
                 return (
                   <Link
                     key={href}
@@ -85,7 +90,8 @@ export default function Sidebar({ user }: { user: any }) {
               })}
             </div>
           </div>
-        ))}
+        ))
+        })()}
       </nav>
 
       {/* User + sign out */}

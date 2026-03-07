@@ -9,8 +9,11 @@ export default async function EditPostPage({ params }: { params: Promise<{ id: s
   if (!post) notFound()
 
   return (
-    <div>
-      <h1 className="mb-8 text-2xl font-bold">Edit Post</h1>
+    <div className="mx-auto max-w-[1200px]">
+      <div className="mb-6">
+        <h1 className="font-display text-2xl font-bold">Edit Post</h1>
+        <p className="mt-0.5 text-sm text-slate-600 truncate">{post.title}</p>
+      </div>
       <PostForm initialData={post} allSeries={allSeries} />
     </div>
   )

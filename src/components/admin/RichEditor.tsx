@@ -21,7 +21,11 @@ import Underline from '@tiptap/extension-underline'
 import TextAlign from '@tiptap/extension-text-align'
 import Highlight from '@tiptap/extension-highlight'
 import Placeholder from '@tiptap/extension-placeholder'
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import { common, createLowlight } from 'lowlight'
 import Color from '@tiptap/extension-color'
+
+const lowlight = createLowlight(common)
 import { TextStyle } from '@tiptap/extension-text-style'
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { cn } from '@/lib/utils'
@@ -78,7 +82,8 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({ codeBlock: false }),
+      CodeBlockLowlight.configure({ lowlight }),
       Underline,
       TextStyle,
       Color,
@@ -286,8 +291,20 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
         <Btn title="Code block" active={editor.isActive('codeBlock')}
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}>
           <code className="font-mono text-[10px]">{'</>'}</code>
-        </Btn>
-        <Btn title="Horizontal rule"
+        </Btn>        {editor.isActive('codeBlock') && (
+          <select
+            value={editor.getAttributes('codeBlock').language || ''}
+            onChange={e =>
+              editor.chain().focus().updateAttributes('codeBlock', { language: e.target.value || null }).run()
+            }
+            className="h-7 rounded-lg border border-white/10 bg-[#0e1829] px-1.5 text-xs text-slate-300 outline-none focus:ring-1 focus:ring-violet-500"
+          >
+            <option value="">auto</option>
+            {['javascript','typescript','jsx','tsx','python','java','go','rust','c','cpp','bash','sh','css','html','json','sql','markdown','yaml','php','ruby','swift','kotlin'].map(lang => (
+              <option key={lang} value={lang}>{lang}</option>
+            ))}
+          </select>
+        )}        <Btn title="Horizontal rule"
           onClick={() => editor.chain().focus().setHorizontalRule().run()}>
           ─
         </Btn>

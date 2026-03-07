@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Series } from '@/types'
 import { slugify } from '@/lib/utils'
+import EmojiPickerModal from '@/components/admin/EmojiPickerModal'
 
 const COLORS = ['blue', 'yellow', 'green', 'violet', 'teal', 'cyan', 'orange'] as const
 const LEVELS = ['Beginner', 'Intermediate', 'Advanced'] as const
@@ -27,6 +28,7 @@ export default function SeriesForm({ initialData = {} }: { initialData?: Partial
   const [level, setLevel]         = useState<string>(initialData.level ?? 'Beginner')
   const [published, setPublished] = useState(initialData.published ?? false)
   const [saving, setSaving]       = useState(false)
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
 
   function addTag() {
     const t = tagInput.trim()
@@ -53,6 +55,7 @@ export default function SeriesForm({ initialData = {} }: { initialData?: Partial
   }
 
   return (
+    <>
     <div className="flex max-w-2xl flex-col gap-5">
       <Field label="Title">
         <input
@@ -103,8 +106,34 @@ export default function SeriesForm({ initialData = {} }: { initialData?: Partial
         </div>
       </Field>
 
-      <Field label="Icon (emoji)">
-        <input value={icon} onChange={e => setIcon(e.target.value)} placeholder="☕" className="input-style w-24" />
+      <Field label="Icon">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setShowEmojiPicker(true)}
+            className="flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-3xl transition hover:border-violet-500/50 hover:bg-white/10"
+          >
+            {icon || <span className="text-slate-600 text-base">+</span>}
+          </button>
+          <div className="flex flex-col gap-1">
+            <button
+              type="button"
+              onClick={() => setShowEmojiPicker(true)}
+              className="rounded-lg bg-violet-600/20 px-4 py-1.5 text-xs font-medium text-violet-300 hover:bg-violet-600/30 transition"
+            >
+              {icon ? 'Change Icon' : 'Pick Icon'}
+            </button>
+            {icon && (
+              <button
+                type="button"
+                onClick={() => setIcon('')}
+                className="rounded-lg px-4 py-1.5 text-xs text-slate-500 hover:text-slate-300 transition"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+        </div>
       </Field>
 
       <Field label="Color">
@@ -154,6 +183,15 @@ export default function SeriesForm({ initialData = {} }: { initialData?: Partial
         </button>
       </div>
     </div>
+
+    {showEmojiPicker && (
+      <EmojiPickerModal
+        current={icon}
+        onSelect={setIcon}
+        onClose={() => setShowEmojiPicker(false)}
+      />
+    )}
+    </>
   )
 }
 

@@ -15,7 +15,7 @@
 export default function NavRabbit() {
   return (
     <span
-      className="relative flex h-7 w-14 shrink-0 items-end overflow-hidden"
+      className="relative flex h-12 w-20 shrink-0 items-end overflow-visible"
       role="img"
       aria-label="Running rabbit"
     >
@@ -30,9 +30,9 @@ export default function NavRabbit() {
         @keyframes rab-run {
           0%   { transform: translateX(0px)  scaleX(1);  }
           5%   { transform: translateX(0px)  scaleX(1);  }
-          43%  { transform: translateX(28px) scaleX(1);  }
-          50%  { transform: translateX(28px) scaleX(-1); }
-          55%  { transform: translateX(28px) scaleX(-1); }
+          43%  { transform: translateX(48px) scaleX(1);  }
+          50%  { transform: translateX(48px) scaleX(-1); }
+          55%  { transform: translateX(48px) scaleX(-1); }
           93%  { transform: translateX(0px)  scaleX(-1); }
           100% { transform: translateX(0px)  scaleX(1);  }
         }
@@ -45,9 +45,9 @@ export default function NavRabbit() {
             – width 20 fits tail(x≈2)…nose(x≈18)
         */}
         <svg
-          width="20"
-          height="26"
-          viewBox="0 0 20 26"
+          width="32"
+          height="44"
+          viewBox="0 -5 20 31"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"

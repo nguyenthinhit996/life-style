@@ -93,20 +93,20 @@ export default function NavRabbit() {
             </defs>
 
             <g>
-              {/* FAR back leg: hip at (17,38) */}
-              <g transform="translate(17,38)">
-                <path d="M0,0 C-4,4 3,10 1,19" stroke="#b8ad9a" strokeWidth="4.5" strokeLinecap="round" fill="none">
+              {/* FAR back leg: hip at (15,40) — short haunch */}
+              <g transform="translate(15,40)">
+                <path d="M0,0 C-3,2 1,6 0,10" stroke="#b8ad9a" strokeWidth="3.8" strokeLinecap="round" fill="none">
                   <animateTransform attributeName="transform" type="rotate"
-                    values="-26,0,0; 22,0,0; -26,0,0"
+                    values="-18,0,0; 16,0,0; -18,0,0"
                     keyTimes="0; 0.5; 1" dur="0.52s" repeatCount="indefinite" />
                 </path>
               </g>
 
-              {/* FAR front leg: shoulder at (30,38) */}
-              <g transform="translate(30,38)">
-                <path d="M0,0 C2,5 1,11 3,17" stroke="#b8ad9a" strokeWidth="3.5" strokeLinecap="round" fill="none">
+              {/* FAR front leg: shoulder at (30,39) — short paw */}
+              <g transform="translate(30,39)">
+                <path d="M0,0 C1,3 1,6 2,9" stroke="#b8ad9a" strokeWidth="3.0" strokeLinecap="round" fill="none">
                   <animateTransform attributeName="transform" type="rotate"
-                    values="22,0,0; -26,0,0; 22,0,0"
+                    values="16,0,0; -18,0,0; 16,0,0"
                     keyTimes="0; 0.5; 1" dur="0.52s" repeatCount="indefinite" />
                 </path>
               </g>
@@ -119,19 +119,19 @@ export default function NavRabbit() {
               <ellipse cx="22" cy="29" rx="17" ry="12" fill="url(#rFur)" />
 
               {/* NEAR back leg: opposite phase */}
-              <g transform="translate(14,38)">
-                <path d="M0,0 C-4,4 3,10 1,19" stroke="#ccc0ac" strokeWidth="5.5" strokeLinecap="round" fill="none">
+              <g transform="translate(12,40)">
+                <path d="M0,0 C-3,2 1,6 0,10" stroke="#ccc0ac" strokeWidth="4.8" strokeLinecap="round" fill="none">
                   <animateTransform attributeName="transform" type="rotate"
-                    values="22,0,0; -26,0,0; 22,0,0"
+                    values="16,0,0; -18,0,0; 16,0,0"
                     keyTimes="0; 0.5; 1" dur="0.52s" repeatCount="indefinite" />
                 </path>
               </g>
 
               {/* NEAR front leg: opposite phase */}
-              <g transform="translate(27,38)">
-                <path d="M0,0 C2,5 1,11 3,17" stroke="#ccc0ac" strokeWidth="4.5" strokeLinecap="round" fill="none">
+              <g transform="translate(27,39)">
+                <path d="M0,0 C1,3 1,6 2,9" stroke="#ccc0ac" strokeWidth="3.8" strokeLinecap="round" fill="none">
                   <animateTransform attributeName="transform" type="rotate"
-                    values="-26,0,0; 22,0,0; -26,0,0"
+                    values="-18,0,0; 16,0,0; -18,0,0"
                     keyTimes="0; 0.5; 1" dur="0.52s" repeatCount="indefinite" />
                 </path>
               </g>

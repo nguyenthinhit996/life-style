@@ -15,145 +15,124 @@
 export default function NavRabbit() {
   return (
     <span
-      className="relative flex h-12 w-20 shrink-0 items-end overflow-visible"
+      className="relative flex h-12 w-24 shrink-0 items-end overflow-visible"
       role="img"
       aria-label="Running rabbit"
     >
-      {/* Keyframes injected here so no global CSS writes are needed */}
       <style>{`
-        .rab-runner {
+        .rab-track {
           position: absolute;
           bottom: 0;
-          /* slide left→right, pause, flip, slide right→left, pause, flip back */
-          animation: rab-run 4s ease-in-out infinite;
+          animation: rab-go 4s ease-in-out infinite;
         }
-        @keyframes rab-run {
-          0%   { transform: translateX(0px)  scaleX(1);  }
-          5%   { transform: translateX(0px)  scaleX(1);  }
-          43%  { transform: translateX(48px) scaleX(1);  }
-          50%  { transform: translateX(48px) scaleX(-1); }
-          55%  { transform: translateX(48px) scaleX(-1); }
-          93%  { transform: translateX(0px)  scaleX(-1); }
-          100% { transform: translateX(0px)  scaleX(1);  }
+        @keyframes rab-go {
+          0%,4%   { transform: translateX(0px)  scaleX(1);  }
+          44%     { transform: translateX(52px) scaleX(1);  }
+          50%,54% { transform: translateX(52px) scaleX(-1); }
+          96%     { transform: translateX(0px)  scaleX(-1); }
+          100%    { transform: translateX(0px)  scaleX(1);  }
         }
       `}</style>
 
-      <span className="rab-runner">
-        {/*
-          viewBox "0 0 20 26":
-            – rabbit sits from y≈0 (ear tips) to y≈25 (leg bottoms)
-            – width 20 fits tail(x≈2)…nose(x≈18)
-        */}
+      <span className="rab-track">
         <svg
-          width="32"
-          height="44"
-          viewBox="0 -5 20 31"
+          width="44"
+          height="46"
+          viewBox="0 -14 56 66"
+          overflow="visible"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
         >
-          {/* ── BODY GROUP (hops as a whole) ─────────────────────────────────── */}
+          <defs>
+            <radialGradient id="rFur" cx="42%" cy="36%" r="62%">
+              <stop offset="0%" stopColor="#f4f0e6" />
+              <stop offset="100%" stopColor="#ccc0ac" />
+            </radialGradient>
+          </defs>
+
           <g>
-            {/* 2-beat hop: up at 0.125 & 0.625, down at 0.375 & 0.875 */}
             <animateTransform
               attributeName="transform"
               type="translate"
-              values="0,0; 0,-3; 0,0; 0,-3; 0,0"
-              keyTimes="0; 0.125; 0.375; 0.625; 1"
-              dur="0.46s"
+              values="0,0; 0,-5; 0,0; 0,-5; 0,0"
+              keyTimes="0; 0.15; 0.4; 0.65; 1"
+              dur="0.52s"
               repeatCount="indefinite"
             />
 
-            {/* ── EARS ────────────────────────────────────────────────────────── */}
-            {/* Left ear — pivots at base (~12, 9) */}
-            <ellipse cx="12" cy="4.5" rx="2" ry="5" fill="#c4b5fd">
-              <animateTransform
-                attributeName="transform"
-                type="rotate"
-                values="0,12,9; -14,12,9; 0,12,9"
-                keyTimes="0; 0.5; 1"
-                dur="4s"
-                repeatCount="indefinite"
-              />
-            </ellipse>
-            {/* Right ear — pivots at base (~15, 9) */}
-            <ellipse cx="15.5" cy="4" rx="2" ry="5.5" fill="#a78bfa">
-              <animateTransform
-                attributeName="transform"
-                type="rotate"
-                values="0,15.5,9; -14,15.5,9; 0,15.5,9"
-                keyTimes="0; 0.5; 1"
-                dur="4s"
-                repeatCount="indefinite"
-                begin="0.2s"
-              />
-            </ellipse>
+            {/* FAR back leg: hip at (17,38), thigh sweeps back, hock sweeps forward */}
+            <g transform="translate(17,38)">
+              <path d="M0,0 C-4,4 3,10 1,19" stroke="#b8ad9a" strokeWidth="4.5" strokeLinecap="round" fill="none">
+                <animateTransform attributeName="transform" type="rotate"
+                  values="-26,0,0; 22,0,0; -26,0,0"
+                  keyTimes="0; 0.5; 1" dur="0.52s" repeatCount="indefinite" />
+              </path>
+            </g>
 
-            {/* ── HEAD ────────────────────────────────────────────────────────── */}
-            <circle cx="13.5" cy="12" r="5" fill="#ede9fe" />
+            {/* FAR front leg: shoulder at (30,38), slender near-vertical */}
+            <g transform="translate(30,38)">
+              <path d="M0,0 C2,5 1,11 3,17" stroke="#b8ad9a" strokeWidth="3.5" strokeLinecap="round" fill="none">
+                <animateTransform attributeName="transform" type="rotate"
+                  values="22,0,0; -26,0,0; 22,0,0"
+                  keyTimes="0; 0.5; 1" dur="0.52s" repeatCount="indefinite" />
+              </path>
+            </g>
 
-            {/* Eye */}
-            <circle cx="15.8" cy="10.5" r="1.3" fill="#2d1b69" />
-            <circle cx="16.2" cy="10.0" r="0.4" fill="white" />
+            {/* FLUFFY COTTONTAIL */}
+            <circle cx="5.5" cy="26" r="6.5" fill="#f8f5ef" />
+            <circle cx="5"   cy="25" r="4.5" fill="white"   />
 
-            {/* Nose */}
-            <ellipse cx="18" cy="13" rx="0.9" ry="0.6" fill="#fbcfe8" />
+            {/* BODY */}
+            <ellipse cx="22" cy="29" rx="17" ry="12" fill="url(#rFur)" />
 
-            {/* ── BODY ────────────────────────────────────────────────────────── */}
-            <ellipse cx="8.5" cy="17.5" rx="6" ry="4" fill="#ede9fe" />
+            {/* NEAR back leg: opposite phase to far back leg */}
+            <g transform="translate(14,38)">
+              <path d="M0,0 C-4,4 3,10 1,19" stroke="#ccc0ac" strokeWidth="5.5" strokeLinecap="round" fill="none">
+                <animateTransform attributeName="transform" type="rotate"
+                  values="22,0,0; -26,0,0; 22,0,0"
+                  keyTimes="0; 0.5; 1" dur="0.52s" repeatCount="indefinite" />
+              </path>
+            </g>
 
-            {/* ── TAIL ────────────────────────────────────────────────────────── */}
-            <circle cx="2.5" cy="16" r="2.5" fill="#ddd6fe" />
+            {/* NEAR front leg: opposite phase to far front leg */}
+            <g transform="translate(27,38)">
+              <path d="M0,0 C2,5 1,11 3,17" stroke="#ccc0ac" strokeWidth="4.5" strokeLinecap="round" fill="none">
+                <animateTransform attributeName="transform" type="rotate"
+                  values="-26,0,0; 22,0,0; -26,0,0"
+                  keyTimes="0; 0.5; 1" dur="0.52s" repeatCount="indefinite" />
+              </path>
+            </g>
 
-            {/* ── LEGS (bounding gait: front pair + back pair alternate) ──────── */}
+            {/* BACK EAR: darker, leans slightly backward, rotated around base */}
+            <ellipse cx="35" cy="4" rx="4"   ry="13"  fill="#bdb19d" transform="rotate(-14 35 17)" />
+            <ellipse cx="35" cy="4" rx="2.2" ry="8.5" fill="#f09aaa" transform="rotate(-14 35 17)" />
 
-            {/* Front leg A — up at t=0,0.5 */}
-            <rect x="12.5" y="21" width="2.5" height="4" rx="1.2" fill="#c4b5fd">
-              <animateTransform
-                attributeName="transform"
-                type="translate"
-                values="1,-3; 0,0; 1,-3; 0,0; 1,-3"
-                keyTimes="0; 0.25; 0.5; 0.75; 1"
-                dur="0.46s"
-                repeatCount="indefinite"
-              />
-            </rect>
+            {/* HEAD */}
+            <circle cx="38" cy="21" r="12" fill="url(#rFur)" />
 
-            {/* Front leg B — up at t=0,0.5 (together with A) */}
-            <rect x="15" y="21" width="2" height="4" rx="1" fill="#c4b5fd">
-              <animateTransform
-                attributeName="transform"
-                type="translate"
-                values="-1,-3; 0,0; -1,-3; 0,0; -1,-3"
-                keyTimes="0; 0.25; 0.5; 0.75; 1"
-                dur="0.46s"
-                repeatCount="indefinite"
-              />
-            </rect>
+            {/* FRONT EAR: slightly longer, tilted forward */}
+            <ellipse cx="41" cy="3" rx="5"   ry="14"  fill="#e8dece" transform="rotate(8 41 17)" />
+            <ellipse cx="41" cy="3" rx="2.8" ry="9.5" fill="#f4a8b8" transform="rotate(8 41 17)" />
 
-            {/* Back leg A — up at t=0.25, 0.75 (opposite phase to front) */}
-            <rect x="6" y="21" width="2.5" height="4" rx="1.2" fill="#a78bfa">
-              <animateTransform
-                attributeName="transform"
-                type="translate"
-                values="0,0; -1,-3; 0,0; -1,-3; 0,0"
-                keyTimes="0; 0.25; 0.5; 0.75; 1"
-                dur="0.46s"
-                repeatCount="indefinite"
-              />
-            </rect>
+            {/* EYE */}
+            <circle cx="44.5" cy="18"   r="3.5" fill="#160e1e" />
+            <circle cx="45.8" cy="16.8" r="1.3" fill="white"   />
+            <circle cx="43.6" cy="19.8" r="0.6" fill="white" opacity="0.55" />
 
-            {/* Back leg B — up at t=0.25, 0.75 (together with A) */}
-            <rect x="8.5" y="21" width="2" height="4" rx="1" fill="#a78bfa">
-              <animateTransform
-                attributeName="transform"
-                type="translate"
-                values="0,0; 1,-3; 0,0; 1,-3; 0,0"
-                keyTimes="0; 0.25; 0.5; 0.75; 1"
-                dur="0.46s"
-                repeatCount="indefinite"
-              />
-            </rect>
+            {/* NOSE */}
+            <ellipse cx="50" cy="22.5" rx="2.2" ry="1.5" fill="#cc6070" />
+
+            {/* SMILE */}
+            <path d="M49 24 Q50.2 26.5 51.5 24" stroke="#aa4862" strokeWidth="1" strokeLinecap="round" fill="none" />
+
+            {/* CHEEK BLUSH */}
+            <ellipse cx="46" cy="25" rx="3.5" ry="2" fill="#ff8090" opacity="0.2" />
+
+            {/* WHISKERS */}
+            <line x1="50.5" y1="21"   x2="55.5" y2="19"   stroke="#c4b8a4" strokeWidth="0.8" opacity="0.8" />
+            <line x1="50.5" y1="22.5" x2="55.5" y2="22.5" stroke="#c4b8a4" strokeWidth="0.8" opacity="0.8" />
+            <line x1="50.5" y1="24"   x2="55.5" y2="26"   stroke="#c4b8a4" strokeWidth="0.8" opacity="0.8" />
           </g>
         </svg>
       </span>

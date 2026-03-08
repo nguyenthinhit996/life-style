@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import NavRabbit from '@/components/public/NavRabbit'
+import NavGrass from '@/components/public/NavGrass'
 
 const navLinks = [
   { href: '/blog', label: 'Blog' },
@@ -17,7 +18,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#334155]/50 bg-[#0C1524]/80 backdrop-blur-md">
+    <header className="relative sticky top-0 z-50 border-b border-[#334155]/50 bg-[#0C1524]/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center px-4 sm:px-6">
         {/* Logo */}
         <Link
@@ -61,6 +62,9 @@ export default function Navbar() {
           {mobileOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
+
+      {/* Grass + flowers strip along the bottom of the navbar */}
+      <NavGrass />
 
       {/* Mobile nav */}
       {mobileOpen && (

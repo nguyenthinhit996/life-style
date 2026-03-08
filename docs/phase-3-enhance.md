@@ -11,8 +11,8 @@
 ```bash
 npm run dev           # start at localhost:3000
 # log in at /admin/login
-# Email:    peter@lifestyle.dev
-# Password: admin2026
+# Email:    <ADMIN_EMAIL>
+# Password: <ADMIN_PASSWORD>
 ```
 
 ---

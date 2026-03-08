@@ -2,7 +2,7 @@
   {
     "id": "admin-peter",
     "email": "peter@lifestyle.dev",
-    "password": "$2b$10$q8Sd90AdgfpeK9YCxIbCvOWhyi4LvXlDVdEjGjM3UB/0fhIH.Q78q",
+    "password": "$2b$10$K7AyHdBsHjm9/x5R2dVoRewHQ.2IaWWCzyk/BATiLvor.EvntRqnO",
     "name": "Peter",
     "role": "admin",
     "createdAt": "2026-01-01T00:00:00Z"

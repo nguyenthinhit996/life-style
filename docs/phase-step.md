@@ -240,7 +240,7 @@ Refer to `docs/04-pages-design.md` Page 7 for visual spec.
 ### Step 2.5 — Test login
 
 ```
-Email: peter@lifestyle.dev
+Email: <ADMIN_EMAIL>
 Password: YOUR_PASSWORD (the one you hashed in Phase 0 Step 0.6)
 ```
 

@@ -249,7 +249,7 @@ Run through these manual checks:
 |------|--------|----------------|
 | Unauthenticated redirect | Visit `http://localhost:3000/admin` | Redirects to `/admin/login` |
 | Failed login | Submit wrong password | Error message: "Invalid email or password." |
-| Successful login | Email: `peter@lifestyle.dev` / Password: `admin2026` | Redirects to `/admin` dashboard stub |
+| Successful login | Email: `<ADMIN_EMAIL>` / Password: `<ADMIN_PASSWORD>` | Redirects to `/admin` dashboard stub |
 | Login-while-authed | When logged in, visit `/admin/login` | Redirects to `/admin` |
 | Sign out (manual) | Visit `http://localhost:3000/api/auth/signout` | Session cleared, then can visit `/admin/login` again |
 

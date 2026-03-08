@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import NavRabbit from '@/components/public/NavRabbit'
 
 const navLinks = [
   { href: '/blog', label: 'Blog' },
@@ -23,39 +24,8 @@ export default function Navbar() {
           href="/"
           className="flex items-center gap-2 font-display text-lg font-bold tracking-tight group"
         >
-          {/* Animated icon */}
-          <span className="relative flex h-7 w-7 items-center justify-center">
-            {/* Spinning gradient ring */}
-            <span className="absolute inset-0 rounded-full bg-gradient-to-tr from-violet-500 via-cyan-400 to-violet-500 animate-spin [animation-duration:3s] opacity-80 group-hover:opacity-100 transition-opacity" />
-            {/* Inner dark circle */}
-            <span className="absolute inset-[2px] rounded-full bg-[#0C1524]" />
-            {/* Center glyph */}
-            <svg
-              className="relative z-10 h-3.5 w-3.5"
-              viewBox="0 0 16 16"
-              fill="none"
-              aria-hidden="true"
-            >
-              {/* Stylised "L" + pulse dot */}
-              <path
-                d="M4 3 L4 11 L10 11"
-                stroke="url(#ng)"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <circle cx="12" cy="11" r="1.5" fill="url(#ng)">
-                <animate attributeName="r" values="1.5;2.2;1.5" dur="1.8s" repeatCount="indefinite" />
-                <animate attributeName="opacity" values="1;0.5;1" dur="1.8s" repeatCount="indefinite" />
-              </circle>
-              <defs>
-                <linearGradient id="ng" x1="0" y1="0" x2="16" y2="16" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#a78bfa" />
-                  <stop offset="1" stopColor="#22d3ee" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </span>
+          {/* Animated rabbit icon */}
+          <NavRabbit />
           <span className="bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">
             life·style
           </span>

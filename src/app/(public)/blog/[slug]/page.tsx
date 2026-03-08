@@ -6,6 +6,7 @@ import ReadingProgressBar from '@/components/public/ReadingProgressBar'
 import PostCard from '@/components/public/PostCard'
 import BackToTop from '@/components/public/BackToTop'
 import ShareButton from '@/components/public/ShareButton'
+import { applyHighlighting } from '@/lib/highlight'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -117,8 +118,8 @@ export default async function BlogPostPage({ params }: Props) {
           {/* Content */}
           {post.content ? (
             <div
-              className="prose prose-invert prose-headings:font-display prose-p:font-body prose-code:font-mono max-w-none prose-p:text-white/70 prose-headings:text-white prose-a:text-violet-400 prose-a:no-underline hover:prose-a:underline prose-code:bg-[#111E34] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-pre:bg-[#111E34] prose-pre:border prose-pre:border-white/10 prose-img:rounded-xl prose-blockquote:border-violet-500 prose-blockquote:text-white/60"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              className="prose prose-invert prose-headings:font-display prose-p:font-body prose-code:font-mono max-w-none prose-p:text-white/70 prose-headings:text-white prose-a:text-violet-400 prose-a:no-underline hover:prose-a:underline prose-code:bg-[#111E34] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-pre:bg-[#0d1117] prose-pre:border prose-pre:border-white/10 prose-img:rounded-xl prose-blockquote:border-violet-500 prose-blockquote:text-white/60 public-content"
+              dangerouslySetInnerHTML={{ __html: applyHighlighting(post.content) }}
             />
           ) : (
             <p className="text-white/40 font-body italic">Content coming soon.</p>

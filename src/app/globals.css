@@ -100,3 +100,26 @@ body {
     @apply w-full rounded-lg border border-white/10 bg-[#0F172A] px-4 py-2 text-white outline-none focus:border-violet-500;
   }
 }
+
+/* ── Public content: code block styles ── */
+/* Ensure highlighted <pre><code> inside prose looks right */
+.public-content pre {
+  background: #0d1117;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+/* Reset Tailwind prose-code overrides inside a <pre> */
+.public-content pre code {
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  color: #e6edf3;
+  font-size: inherit;
+}
+

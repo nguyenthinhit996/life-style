@@ -1,42 +1,7 @@
 'use client'
 import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import { common, createLowlight } from 'lowlight'
-
-const lowlight = createLowlight(common)
-
-function hastToHtml(node: any): string {
-  if (!node) return ''
-  if (node.type === 'text') {
-    return node.value
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-  }
-  if (node.type === 'element') {
-    const cls = (node.properties?.className as string[] | undefined)?.join(' ') ?? ''
-    const inner = (node.children ?? []).map(hastToHtml).join('')
-    return `<span${cls ? ` class="${cls}"` : ''}>${inner}</span>`
-  }
-  if (node.type === 'root') return (node.children ?? []).map(hastToHtml).join('')
-  return ''
-}
-
-function applyHighlighting(html: string): string {
-  return html.replace(
-    /<pre><code(?: class="language-([^"]*)")?>([\s\S]*?)<\/code><\/pre>/g,
-    (_, lang: string | undefined, raw: string = '') => {
-      const code = raw
-        .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
-        .replace(/&quot;/g, '"').replace(/&#39;/g, "'")
-      try {
-        const tree = lang ? lowlight.highlight(lang, code) : lowlight.highlightAuto(code)
-        const highlighted = hastToHtml(tree)
-        return `<pre><code${lang ? ` class="language-${lang}"` : ''}>${highlighted}</code></pre>`
-      } catch {
-        return `<pre><code${lang ? ` class="language-${lang}"` : ''}>${raw}</code></pre>`
-      }
-    },
-  )
-}
+import { applyHighlighting } from '@/lib/highlight'
 import type { Post, Series, Chapter } from '@/types'
 import RichEditor from '@/components/admin/RichEditor'
 import ImagePickerModal from '@/components/admin/ImagePickerModal'

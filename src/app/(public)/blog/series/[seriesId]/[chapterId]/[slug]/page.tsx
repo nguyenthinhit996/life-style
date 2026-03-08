@@ -6,6 +6,7 @@ import ChapterTree from '@/components/public/ChapterTree'
 import LessonNav from '@/components/public/LessonNav'
 import ReadingProgressBar from '@/components/public/ReadingProgressBar'
 import BackToTop from '@/components/public/BackToTop'
+import { applyHighlighting } from '@/lib/highlight'
 import type { Post } from '@/types'
 
 interface Props {
@@ -123,8 +124,8 @@ export default async function LessonPage({ params }: Props) {
             {/* Content */}
             {post.content ? (
               <div
-                className="prose prose-invert prose-headings:font-display prose-p:font-body prose-code:font-mono max-w-none prose-p:text-white/70 prose-headings:text-white prose-a:text-violet-400 prose-a:no-underline hover:prose-a:underline prose-code:bg-[#111E34] prose-code:text-sm prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-pre:bg-[#111E34] prose-pre:border prose-pre:border-white/10 prose-img:rounded-xl prose-blockquote:border-violet-500 prose-blockquote:text-white/60"
-                dangerouslySetInnerHTML={{ __html: post.content }}
+                className="prose prose-invert prose-headings:font-display prose-p:font-body prose-code:font-mono max-w-none prose-p:text-white/70 prose-headings:text-white prose-a:text-violet-400 prose-a:no-underline hover:prose-a:underline prose-code:bg-[#111E34] prose-code:text-sm prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-pre:bg-[#0d1117] prose-pre:border prose-pre:border-white/10 prose-img:rounded-xl prose-blockquote:border-violet-500 prose-blockquote:text-white/60 public-content"
+                dangerouslySetInnerHTML={{ __html: applyHighlighting(post.content) }}
               />
             ) : (
               <div className="rounded-xl bg-[#0C1524] border border-white/10 p-8 text-center">

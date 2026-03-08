@@ -2,8 +2,8 @@
   "bio": "Hi, I'm Peter — a software developer and English enthusiast. I write about Java, JavaScript, Python, AI, and effective English for developers.",
   "skills": ["Java", "JavaScript", "TypeScript", "Next.js", "Python", "English C1"],
   "social": {
-    "github": "",
-    "linkedin": "",
-    "twitter": ""
+    "github": "https://github.com/",
+    "linkedin": "https://linkedin.com/in/",
+    "twitter": "https://x.com/"
   }
 }

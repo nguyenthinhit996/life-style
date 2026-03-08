@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { useSearchParams } from 'next/navigation'
 import type { Series, Post } from '@/types'
 import SeriesCard from './SeriesCard'
 import PostCard from './PostCard'
@@ -21,7 +22,12 @@ const categories: { value: Category; label: string }[] = [
 ]
 
 export default function BlogListingClient({ seriesWithCount, posts }: Props) {
-  const [category, setCategory] = useState<Category>('ALL')
+  const searchParams = useSearchParams()
+  const urlCategory = searchParams.get('category') as Category | null
+  const validCategories: Category[] = ['ALL', 'IT', 'ENGLISH', 'LIFESTYLE']
+  const initialCategory: Category =
+    urlCategory && validCategories.includes(urlCategory) ? urlCategory : 'ALL'
+  const [category, setCategory] = useState<Category>(initialCategory)
   const [search, setSearch] = useState('')
 
   const filteredSeries = useMemo(() => {
@@ -65,7 +71,7 @@ export default function BlogListingClient({ seriesWithCount, posts }: Props) {
                 key={c.value}
                 onClick={() => setCategory(c.value)}
                 className={cn(
-                  'px-4 py-1.5 rounded-full text-sm font-mono transition-colors duration-150',
+                  'px-4 py-2.5 rounded-full text-sm font-mono transition-colors duration-150',
                   category === c.value
                     ? 'bg-violet-600 text-white'
                     : 'bg-[#0C1524] border border-white/10 text-white/60 hover:text-white hover:border-white/30',
@@ -80,6 +86,7 @@ export default function BlogListingClient({ seriesWithCount, posts }: Props) {
             placeholder="Search series & posts…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            aria-label="Search series and posts"
             className="flex-1 min-w-0 px-4 py-2 rounded-xl bg-[#0C1524] border border-white/10 text-white/80 placeholder-white/30 text-sm font-body focus:outline-none focus:border-violet-500/50 transition-colors"
           />
         </div>

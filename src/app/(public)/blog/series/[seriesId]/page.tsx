@@ -40,6 +40,10 @@ export default async function SeriesDetailPage({ params }: Props) {
     : null
 
   const totalLessons = chapters.reduce((sum, ch) => sum + ch.lessons.length, 0)
+  const totalReadTime = chapters.reduce(
+    (sum, ch) => sum + ch.lessons.reduce((s, l) => s + (l.readTime || 0), 0),
+    0
+  )
 
   return (
     <div className="min-h-screen pt-24 pb-20 px-6">
@@ -84,6 +88,7 @@ export default async function SeriesDetailPage({ params }: Props) {
           <div className="mt-5 flex items-center gap-6 text-sm font-mono text-white/40">
             <span>{chapters.length} chapters</span>
             <span>{totalLessons} lessons</span>
+            {totalReadTime > 0 && <span>~{totalReadTime} min total</span>}
           </div>
 
           {/* CTA */}

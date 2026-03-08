@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { getPublishedSeries, getBlogPosts, getPosts } from '@/lib/db'
 import BlogListingClient from '@/components/public/BlogListingClient'
 
@@ -21,5 +22,9 @@ export default async function BlogPage() {
     ).length,
   }))
 
-  return <BlogListingClient seriesWithCount={seriesWithCount} posts={blogPosts} />
+  return (
+    <Suspense fallback={null}>
+      <BlogListingClient seriesWithCount={seriesWithCount} posts={blogPosts} />
+    </Suspense>
+  )
 }

@@ -122,4 +122,13 @@ body {
   color: #e6edf3;
   font-size: inherit;
 }
+.public-content table {
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+}
+.public-content img {
+  max-width: 100%;
+  height: auto;
+}
 

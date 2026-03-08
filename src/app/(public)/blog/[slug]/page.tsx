@@ -56,7 +56,7 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <>
       <ReadingProgressBar />
-      <div className="min-h-screen pt-24 pb-20">
+      <div className="min-h-screen pt-24 pb-20 overflow-x-hidden">
         <article className="max-w-3xl mx-auto px-6">
           {/* Breadcrumb */}
           <nav className="mb-6 text-sm font-mono text-white/30" aria-label="Breadcrumb">

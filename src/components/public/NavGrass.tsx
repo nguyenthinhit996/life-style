@@ -1,6 +1,9 @@
-'use client'
+// Server component — renders once on the server, no client JS.
+// Positions are deterministic and never change between refreshes.
 
-import { useMemo } from 'react'
+// ─── Data generated with a random seed each server render ───────────────────
+// Server component = no hydration, so Math.random() is safe here.
+// Positions will be different on every page refresh.
 
 function seededRng(seed: number) {
   let s = seed >>> 0
@@ -12,58 +15,93 @@ function seededRng(seed: number) {
   }
 }
 
-const GREENS = ['#14532d', '#166534', '#15803d', '#16a34a', '#22c55e', '#4ade80']
+// Filled tapered blade: wider at base, pointed at tip, with natural lean
+function bladePath(cx: number, base: number, h: number, lean: number, w: number): string {
+  const c1x = cx - w * 0.3,  c1y = base - h * 0.4
+  const c2x = cx + lean * 0.6, c2y = base - h * 0.8
+  const tx  = cx + lean,       ty  = base - h
+  return (
+    `M ${cx - w} ${base} ` +
+    `C ${c1x - 0.6} ${c1y}, ${c2x - 0.8} ${c2y}, ${tx} ${ty} ` +
+    `C ${c2x + 0.8} ${c2y}, ${c1x + 0.6} ${c1y}, ${cx + w} ${base} Z`
+  )
+}
 
-// Each palette: outer petal, inner petal (lighter), highlight tip, center, inner dot
-const PALETTES = [
-  { outer: '#fde68a', inner: '#fef9c3', tip: '#fffbeb', center: '#f59e0b', dot: '#b45309' }, // sunflower
-  { outer: '#f9a8d4', inner: '#fce7f3', tip: '#fdf2f8', center: '#fef08a', dot: '#fb923c' }, // pink daisy
-  { outer: '#93c5fd', inner: '#dbeafe', tip: '#eff6ff', center: '#fef9c3', dot: '#fcd34d' }, // blue
-  { outer: '#d8b4fe', inner: '#f3e8ff', tip: '#faf5ff', center: '#fef08a', dot: '#a21caf' }, // lavender
-  { outer: '#6ee7b7', inner: '#d1fae5', tip: '#ecfdf5', center: '#fef9c3', dot: '#059669' }, // mint
-  { outer: '#fca5a5', inner: '#fee2e2', tip: '#fff1f2', center: '#fef08a', dot: '#dc2626' }, // coral
-  { outer: '#fdba74', inner: '#ffedd5', tip: '#fff7ed', center: '#fef08a', dot: '#ea580c' }, // orange
-  { outer: '#f0abfc', inner: '#fae8ff', tip: '#fdf4ff', center: '#d9f99d', dot: '#15803d' }, // orchid
-  { outer: '#ffffff', inner: '#f1f5f9', tip: '#f8fafc', center: '#fef9c3', dot: '#86efac' }, // white
-  { outer: '#fcd34d', inner: '#fef9c3', tip: '#fffbeb', center: '#ef4444', dot: '#991b1b' }, // marigold
+const BACK_C  = ['#0e2d14', '#10351a', '#12401e', '#143822']
+const MID_C   = ['#1a5e2a', '#1f6b30', '#237438', '#1c6332']
+const FRONT_C = ['#2d904a', '#359e52', '#3da85a', '#44b060', '#30985a']
+
+const FLOWER_PALETTES = [
+  { outer: '#fde68a', center: '#f59e0b', dot: '#92400e' },
+  { outer: '#f9a8d4', center: '#fbbf24', dot: '#db2777' },
+  { outer: '#c4b5fd', center: '#fef08a', dot: '#7c3aed' },
+  { outer: '#fca5a5', center: '#fef08a', dot: '#dc2626' },
+  { outer: '#93c5fd', center: '#fef9c3', dot: '#2563eb' },
+  { outer: '#6ee7b7', center: '#fef9c3', dot: '#059669' },
+  { outer: '#fdba74', center: '#fef08a', dot: '#ea580c' },
+  { outer: '#ffffff', center: '#fef9c3', dot: '#86efac' },
 ]
 
+// ─── Static scene data ───────────────────────────────────────────────────────
+const W = 1200
+
+function buildScene() {
+  const rng = seededRng(Math.floor(Math.random() * 0xFFFFFF))
+
+  const back = Array.from({ length: 35 }, () => ({
+    x:     rng() * W,
+    h:     6  + rng() * 9,
+    lean:  (rng() - 0.5) * 14,
+    color: BACK_C[Math.floor(rng() * BACK_C.length)],
+    w:     1.1 + rng() * 1.1,
+    dur:   2.2 + rng() * 2.8,
+    delay: rng() * 6,
+    dir:   Math.floor(rng() * 2),
+  }))
+
+  const mid = Array.from({ length: 28 }, () => ({
+    x:     rng() * W,
+    h:     11 + rng() * 11,
+    lean:  (rng() - 0.5) * 18,
+    color: MID_C[Math.floor(rng() * MID_C.length)],
+    w:     1.3 + rng() * 1.3,
+    dur:   1.9 + rng() * 2.2,
+    delay: rng() * 6,
+    dir:   Math.floor(rng() * 2),
+  }))
+
+  const front = Array.from({ length: 22 }, () => ({
+    x:     rng() * W,
+    h:     15 + rng() * 13,
+    lean:  (rng() - 0.5) * 20,
+    color: FRONT_C[Math.floor(rng() * FRONT_C.length)],
+    w:     1.5 + rng() * 1.5,
+    dur:   1.6 + rng() * 2.0,
+    delay: rng() * 6,
+    dir:   Math.floor(rng() * 2),
+  }))
+
+  const flowers = Array.from({ length: 10 }, () => {
+    const size = 0.8 + rng() * 4.8
+    return {
+      x:       50 + rng() * (W - 100),
+      stemH:   10 + size * 2.6 + rng() * 4,
+      palette: FLOWER_PALETTES[Math.floor(rng() * FLOWER_PALETTES.length)],
+      petals:  5 + Math.floor(rng() * 3),
+      size,
+      dur:     2.0 + rng() * 2.0,
+      delay:   rng() * 5,
+    }
+  })
+
+  return { back, mid, front, flowers }
+}
+
+// Generated once per client mount — new layout on each page load
+const { back: BACK_BLADES, mid: MID_BLADES, front: FRONT_BLADES, flowers: FLOWERS } = buildScene()
+// ────────────────────────────────────────────────────────────────────────────
+
 export default function NavGrass() {
-  const { blades, flowers } = useMemo(() => {
-    const rng = seededRng(20260308)
-    const W = 1200
-
-    const blades = Array.from({ length: 28 }, (_, i) => ({
-      x:     rng() * W,
-      h:     7  + rng() * 12,
-      lean:  (rng() - 0.5) * 10,
-      color: GREENS[Math.floor(rng() * GREENS.length)],
-      sw:    1  + rng() * 1.2,
-      dur:   1.8 + rng() * 2,
-      delay: rng() * 4,
-      dir:   i % 2,
-    }))
-
-    const flowers = Array.from({ length: 10 }, () => {
-      const size    = 1.2 + rng() * 4.3          // 1.2 (tiny) → 5.5 (big)
-      const palette = PALETTES[Math.floor(rng() * PALETTES.length)]
-      return {
-        x:        60 + rng() * (W - 120),
-        stemH:    10 + size * 2.2 + rng() * 4,   // taller stem for bigger flowers
-        palette,
-        petals:   5  + Math.floor(rng() * 4),     // 5–8 petals
-        size,
-        dur:      2  + rng() * 2.2,
-        delay:    rng() * 5,
-        hasLeaf:  rng() > 0.45,
-        leafSide: rng() > 0.5 ? 1 : -1,
-        leafPos:  0.38 + rng() * 0.3,             // 38–68% up the stem
-      }
-    })
-
-    return { blades, flowers }
-  }, [])
-
   return (
     <div
       className="pointer-events-none absolute bottom-0 left-0 right-0 z-20 overflow-visible"
@@ -72,119 +110,78 @@ export default function NavGrass() {
       <style>{`
         .gb { transform-origin: 50% 100%; transform-box: fill-box; }
         .fl { transform-origin: 50% 100%; transform-box: fill-box; }
-        @keyframes sw-l { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(-8deg)} }
-        @keyframes sw-r { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate( 8deg)} }
-        @keyframes fl-bob { 0%,100%{transform:rotate(0deg)} 40%{transform:rotate(7deg)} 70%{transform:rotate(-5deg)} }
+        @keyframes sw-l  { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(-7deg)} }
+        @keyframes sw-r  { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate( 7deg)} }
+        @keyframes fl-bob { 0%,100%{transform:rotate(0deg)} 45%{transform:rotate(5deg)} 75%{transform:rotate(-4deg)} }
       `}</style>
 
       <svg
-        viewBox="0 0 1200 32"
+        viewBox="0 0 1200 34"
         preserveAspectRatio="xMidYMax slice"
         width="100%"
         height="28"
         overflow="visible"
       >
-        {/* Grass blades */}
-        {blades.map((b, i) => (
+        {/* Back grass — dark, short, creates depth */}
+        {BACK_BLADES.map((b, i) => (
           <path
-            key={i}
+            key={`bk${i}`}
             className="gb"
-            d={`M${b.x},32 Q${b.x + b.lean},${32 - b.h * 0.55} ${b.x + b.lean * 1.6},${32 - b.h}`}
-            stroke={b.color}
-            strokeWidth={b.sw}
-            fill="none"
-            strokeLinecap="round"
+            d={bladePath(b.x, 34, b.h, b.lean, b.w)}
+            fill={b.color}
+            opacity={0.78}
             style={{ animation: `${b.dir ? 'sw-r' : 'sw-l'} ${b.dur}s ${b.delay}s ease-in-out infinite` }}
           />
         ))}
 
-        {/* Flowers */}
-        {flowers.map((f, i) => {
-          const cx   = f.x
-          const base = 32
-          const cy   = base - f.stemH
-          const leafY = base - f.stemH * f.leafPos
-          const lx   = cx + f.leafSide * (2.5 + f.size * 0.6)
-          const ly   = leafY - f.size * 0.6
-
+        {/* Flowers — between back and mid grass */}
+        {FLOWERS.map((f, i) => {
+          const cx = f.x, base = 34, cy = base - f.stemH
           return (
             <g
-              key={i}
+              key={`fl${i}`}
               className="fl"
               style={{ animation: `fl-bob ${f.dur}s ${f.delay}s ease-in-out infinite` }}
             >
-              {/* stem */}
               <line x1={cx} y1={base} x2={cx} y2={cy}
-                stroke="#15803d" strokeWidth={0.9 + f.size * 0.15} strokeLinecap="round" />
-
-              {/* optional leaf */}
-              {f.hasLeaf && (
-                <ellipse
-                  cx={lx} cy={ly}
-                  rx={1.8 + f.size * 0.55} ry={0.9 + f.size * 0.28}
-                  fill="#16a34a"
-                  opacity={0.85}
-                  transform={`rotate(${f.leafSide * 38}, ${cx}, ${leafY})`}
-                />
-              )}
-
-              {/* outer petals — elongated ellipses rotated around flower center */}
+                stroke="#196a28" strokeWidth={0.7 + f.size * 0.1} strokeLinecap="round" />
               {Array.from({ length: f.petals }, (_, p) => (
-                <ellipse
-                  key={p}
-                  cx={cx}
-                  cy={cy - f.size * 1.15}
-                  rx={f.size * 0.7}
-                  ry={f.size * 1.7}
-                  fill={f.palette.outer}
-                  opacity={0.93}
+                <ellipse key={p}
+                  cx={cx} cy={cy - f.size * 1.05}
+                  rx={f.size * 0.6} ry={f.size * 1.5}
+                  fill={f.palette.outer} opacity={0.92}
                   transform={`rotate(${p * (360 / f.petals)}, ${cx}, ${cy})`}
                 />
               ))}
-
-              {/* inner petals — shorter, lighter, offset 0.5 turn */}
-              {Array.from({ length: f.petals }, (_, p) => (
-                <ellipse
-                  key={p}
-                  cx={cx}
-                  cy={cy - f.size * 0.75}
-                  rx={f.size * 0.45}
-                  ry={f.size * 1.05}
-                  fill={f.palette.inner}
-                  opacity={0.7}
-                  transform={`rotate(${p * (360 / f.petals) + 180 / f.petals}, ${cx}, ${cy})`}
-                />
-              ))}
-
-              {/* petal highlight tips — tiny white shimmer at each tip */}
-              {Array.from({ length: f.petals }, (_, p) => (
-                <circle
-                  key={p}
-                  cx={cx + Math.cos((p * (360 / f.petals) - 90) * (Math.PI / 180)) * f.size * 1.9}
-                  cy={cy + Math.sin((p * (360 / f.petals) - 90) * (Math.PI / 180)) * f.size * 1.9}
-                  r={f.size * 0.28}
-                  fill={f.palette.tip}
-                  opacity={0.6}
-                />
-              ))}
-
-              {/* center glow ring */}
-              <circle cx={cx} cy={cy} r={f.size * 0.95} fill={f.palette.center} opacity={0.6} />
-              {/* center disc */}
-              <circle cx={cx} cy={cy} r={f.size * 0.7}  fill={f.palette.center} />
-              {/* center shadow */}
-              <circle cx={cx} cy={cy} r={f.size * 0.42} fill={f.palette.dot} opacity={0.75} />
-              {/* center shine */}
-              <circle
-                cx={cx - f.size * 0.2}
-                cy={cy - f.size * 0.2}
-                r={f.size * 0.18}
-                fill="white"
-                opacity={0.55}
-              />
+              <circle cx={cx} cy={cy} r={f.size * 0.78} fill={f.palette.center} />
+              <circle cx={cx} cy={cy} r={f.size * 0.46} fill={f.palette.dot} opacity={0.82} />
+              <circle cx={cx - f.size * 0.18} cy={cy - f.size * 0.18} r={f.size * 0.14} fill="white" opacity={0.5} />
             </g>
           )
         })}
+
+        {/* Mid grass */}
+        {MID_BLADES.map((b, i) => (
+          <path
+            key={`md${i}`}
+            className="gb"
+            d={bladePath(b.x, 34, b.h, b.lean, b.w)}
+            fill={b.color}
+            opacity={0.88}
+            style={{ animation: `${b.dir ? 'sw-r' : 'sw-l'} ${b.dur}s ${b.delay}s ease-in-out infinite` }}
+          />
+        ))}
+
+        {/* Front grass — brightest, tallest, most prominent */}
+        {FRONT_BLADES.map((b, i) => (
+          <path
+            key={`ft${i}`}
+            className="gb"
+            d={bladePath(b.x, 34, b.h, b.lean, b.w)}
+            fill={b.color}
+            style={{ animation: `${b.dir ? 'sw-r' : 'sw-l'} ${b.dur}s ${b.delay}s ease-in-out infinite` }}
+          />
+        ))}
       </svg>
     </div>
   )

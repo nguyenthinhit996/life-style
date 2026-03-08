@@ -5,8 +5,9 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import dynamic from 'next/dynamic'
 import NavRabbit from '@/components/public/NavRabbit'
-import NavGrass from '@/components/public/NavGrass'
+const NavGrass = dynamic(() => import('@/components/public/NavGrass'), { ssr: false })
 
 const navLinks = [
   { href: '/blog', label: 'Blog' },

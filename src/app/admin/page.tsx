@@ -68,7 +68,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* ── Stats bento ── */}
-      <div className="grid grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         <StatCard label="Total Posts" value={posts.length}    sub={`${blogCount} blog · ${lessonCount} lessons`} accentFrom="from-violet-500" />
         <StatCard label="Published"   value={published}       sub="live on the site"                             accentFrom="from-emerald-500" />
         <StatCard label="Drafts"      value={drafts}          sub="not yet visible"                              accentFrom="from-amber-500" />

@@ -75,7 +75,7 @@ export default async function LessonPage({ params }: Props) {
           </aside>
 
           {/* Main content */}
-          <article className="flex-1 min-w-0 py-10 pb-20">
+          <article className="flex-1 min-w-0 max-w-3xl py-10 pb-20">
             {/* Breadcrumb */}
             <nav className="mb-6 text-sm font-mono text-white/30" aria-label="Breadcrumb">
               <Link href="/blog" className="hover:text-white/60 transition-colors">
@@ -95,10 +95,21 @@ export default async function LessonPage({ params }: Props) {
             {/* Mobile: back to series link */}
             <Link
               href={`/blog/series/${seriesId}`}
-              className="lg:hidden mb-6 inline-flex items-center gap-1.5 text-xs font-mono text-white/40 hover:text-white/60 transition-colors"
+              className="lg:hidden mb-4 inline-flex items-center gap-1.5 text-xs font-mono text-white/40 hover:text-white/60 transition-colors"
             >
               ← {tree.title}
             </Link>
+
+            {/* Mobile chapter outline */}
+            <details className="lg:hidden mb-6 rounded-xl border border-white/10 bg-[#0C1524]">
+              <summary className="cursor-pointer px-4 py-3 text-sm font-mono text-white/50 hover:text-white/80 transition-colors list-none flex items-center justify-between">
+                <span>Course Outline</span>
+                <span className="text-xs text-white/30">▾</span>
+              </summary>
+              <div className="px-4 pb-4">
+                <ChapterTree chapters={tree.chapters} seriesId={seriesId} currentLessonSlug={slug} />
+              </div>
+            </details>
 
             {/* Lesson header */}
             <header className="mb-8">

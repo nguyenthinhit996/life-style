@@ -70,8 +70,17 @@ export async function getSeriesById(id: string): Promise<Series | undefined> {
 }
 
 export async function createSeries(data: Omit<Series, 'id'>): Promise<Series> {
-  const ref = await addDoc(collection(db, 'series'), data)
-  return { id: ref.id, ...data }
+  const now = new Date().toISOString()
+  const doc_data = {
+    ...data,
+    order: data.order ?? 0,
+    totalChapters: data.totalChapters ?? 0,
+    totalLessons: data.totalLessons ?? 0,
+    createdAt: data.createdAt ?? now,
+    updatedAt: data.updatedAt ?? now,
+  }
+  const ref = await addDoc(collection(db, 'series'), doc_data)
+  return { id: ref.id, ...doc_data }
 }
 
 export async function updateSeries(id: string, data: Partial<Series>): Promise<Series | null> {
@@ -107,8 +116,13 @@ export async function getChaptersBySeries(seriesId: string): Promise<Chapter[]> 
 }
 
 export async function createChapter(data: Omit<Chapter, 'id'>): Promise<Chapter> {
-  const ref = await addDoc(collection(db, 'chapters'), data)
-  return { id: ref.id, ...data }
+  const doc_data = {
+    ...data,
+    order: data.order ?? 0,
+    totalLessons: data.totalLessons ?? 0,
+  }
+  const ref = await addDoc(collection(db, 'chapters'), doc_data)
+  return { id: ref.id, ...doc_data }
 }
 
 export async function updateChapter(id: string, data: Partial<Chapter>): Promise<Chapter | null> {
@@ -199,8 +213,17 @@ export async function getSeriesTree(seriesId: string) {
 }
 
 export async function createPost(data: Omit<Post, 'id'>): Promise<Post> {
-  const ref = await addDoc(collection(db, 'posts'), data)
-  return { id: ref.id, ...data }
+  const now = new Date().toISOString()
+  const doc_data = {
+    ...data,
+    order: data.order ?? 0,
+    tags: data.tags ?? [],
+    published: data.published ?? false,
+    createdAt: data.createdAt ?? now,
+    updatedAt: data.updatedAt ?? now,
+  }
+  const ref = await addDoc(collection(db, 'posts'), doc_data)
+  return { id: ref.id, ...doc_data }
 }
 
 export async function updatePost(id: string, data: Partial<Post>): Promise<Post | null> {

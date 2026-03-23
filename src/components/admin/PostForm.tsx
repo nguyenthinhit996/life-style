@@ -49,12 +49,14 @@ export default function PostForm({ initialData = {}, allSeries }: PostFormProps)
 
   async function handleSave(publish: boolean) {
     setSaving(true)
-    const payload = {
+    const payload: Record<string, unknown> = {
       title, slug, type,
       seriesId: type === 'lesson' ? seriesId : null,
       chapterId: type === 'lesson' ? chapterId : null,
       category, excerpt, coverImage, content,
+      tags: [],
       published: publish,
+      order: initialData.order ?? 0,
       readTime: Math.max(1, Math.ceil(content.replace(/<[^>]+>/g, '').split(/\s+/).length / 200)),
       createdAt: initialData.createdAt ?? new Date().toISOString(),
       updatedAt: new Date().toISOString(),

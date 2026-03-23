@@ -38,10 +38,17 @@ export default function SeriesForm({ initialData = {} }: { initialData?: Partial
 
   async function handleSave() {
     setSaving(true)
-    const payload = {
+    const payload: Record<string, unknown> = {
       title,
       slug: slug || slugify(title),
       description, category, tags, icon, color, level, published,
+      order: initialData.order ?? 0,
+      updatedAt: new Date().toISOString(),
+    }
+    if (!isEdit) {
+      payload.totalChapters = 0
+      payload.totalLessons = 0
+      payload.createdAt = new Date().toISOString()
     }
     const url    = isEdit ? `/api/series/${initialData.id}` : '/api/series'
     const method = isEdit ? 'PUT' : 'POST'

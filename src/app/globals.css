@@ -7,11 +7,11 @@
   --font-body:    "DM Sans", sans-serif;
   --font-mono:    "JetBrains Mono", monospace;
 
-  /* Brand colors */
-  --color-bg:           #070D1A;
-  --color-surface:      #0C1524;
-  --color-surface2:     #111E34;
-  --color-border:       #334155;
+  /* Brand colors — Light Theme C (Fresh & Bold) */
+  --color-bg:           #F8FAFC;
+  --color-surface:      #FFFFFF;
+  --color-surface2:     #F1F5F9;
+  --color-border:       #E2E8F0;
   --color-violet:       #7C3AED;
   --color-violet-dark:  #6D28D9;
   --color-cyan:         #06B6D4;
@@ -22,8 +22,8 @@
   --color-red:          #EF4444;
   --color-amber:        #F59E0B;
   --color-emerald:      #10B981;
-  --color-text:         #F8FAFC;
-  --color-muted:        #94A3B8;
+  --color-text:         #0F172A;
+  --color-muted:        #475569;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -35,9 +35,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Syntax Highlighting — GitHub Dark (lowlight / highlight.js) ── */
+/* ── Syntax Highlighting — GitHub Light (lowlight / highlight.js) ── */
 
-/* Editor code blocks */
+/* Editor code blocks (admin — dark) */
 .ProseMirror pre {
   background: #0d1117;
   border: 1px solid rgba(255,255,255,0.07);
@@ -57,7 +57,40 @@ body {
   border-radius: 0;
 }
 
-/* Token colors */
+/* Public content token colors — GitHub Light */
+.public-content .hljs-comment,
+.public-content .hljs-meta           { color: #6E7781; font-style: italic; }
+.public-content .hljs-keyword,
+.public-content .hljs-type,
+.public-content .hljs-variable.language_ { color: #CF222E; }
+.public-content .hljs-title,
+.public-content .hljs-title.class_,
+.public-content .hljs-title.class_.inherited__,
+.public-content .hljs-title.function_ { color: #8250DF; }
+.public-content .hljs-string,
+.public-content .hljs-quote,
+.public-content .hljs-regexp         { color: #0A3069; }
+.public-content .hljs-number,
+.public-content .hljs-built_in,
+.public-content .hljs-symbol         { color: #953800; }
+.public-content .hljs-attr,
+.public-content .hljs-attribute,
+.public-content .hljs-variable,
+.public-content .hljs-selector-id    { color: #0550AE; }
+.public-content .hljs-literal        { color: #953800; }
+.public-content .hljs-tag            { color: #116329; }
+.public-content .hljs-name           { color: #116329; }
+.public-content .hljs-selector-tag   { color: #CF222E; }
+.public-content .hljs-selector-class { color: #953800; }
+.public-content .hljs-bullet         { color: #953800; }
+.public-content .hljs-addition       { color: #116329; background: rgba(46,160,67,0.08); }
+.public-content .hljs-deletion       { color: #CF222E; background: rgba(255,129,130,0.08); }
+.public-content .hljs-operator,
+.public-content .hljs-punctuation    { color: #24292F; }
+.public-content .hljs-template-variable,
+.public-content .hljs-template-tag   { color: #CF222E; }
+
+/* Admin (dark) token colors — GitHub Dark */
 .hljs-comment,
 .hljs-meta           { color: #8b949e; font-style: italic; }
 .hljs-keyword,
@@ -101,11 +134,10 @@ body {
   }
 }
 
-/* ── Public content: code block styles ── */
-/* Ensure highlighted <pre><code> inside prose looks right */
+/* ── Public content: code block styles (light) ── */
 .public-content pre {
-  background: #0d1117;
-  border: 1px solid rgba(255,255,255,0.07);
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
   border-radius: 12px;
   padding: 1.25rem 1.5rem;
   margin: 1.5rem 0;
@@ -113,13 +145,21 @@ body {
   font-family: var(--font-mono);
   font-size: 0.875rem;
   line-height: 1.7;
+  position: relative;
 }
-/* Reset Tailwind prose-code overrides inside a <pre> */
+.public-content pre::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 12px 12px 0 0;
+  background: linear-gradient(90deg, #7C3AED, #06B6D4);
+}
 .public-content pre code {
   background: transparent !important;
   padding: 0 !important;
   border-radius: 0 !important;
-  color: #e6edf3;
+  color: #24292F;
   font-size: inherit;
 }
 .public-content table {

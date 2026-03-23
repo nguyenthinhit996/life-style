@@ -27,9 +27,9 @@ function bladePath(cx: number, base: number, h: number, lean: number, w: number)
   )
 }
 
-const BACK_C  = ['#0e2d14', '#10351a', '#12401e', '#143822']
-const MID_C   = ['#1a5e2a', '#1f6b30', '#237438', '#1c6332']
-const FRONT_C = ['#2d904a', '#359e52', '#3da85a', '#44b060', '#30985a']
+const BACK_C  = ['#4ade80', '#34d399', '#22c55e', '#2dd4bf']
+const MID_C   = ['#16a34a', '#15803d', '#059669', '#0d9488']
+const FRONT_C = ['#22c55e', '#10b981', '#34d399', '#4ade80', '#2dd4bf']
 
 const FLOWER_PALETTES = [
   { outer: '#fde68a', center: '#f59e0b', dot: '#92400e' },

@@ -32,9 +32,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const categoryColors: Record<string, string> = {
-  IT: 'bg-violet-500/20 text-violet-300',
-  ENGLISH: 'bg-cyan-500/20 text-cyan-300',
-  LIFESTYLE: 'bg-emerald-500/20 text-emerald-300',
+  IT: 'bg-violet-100 text-violet-700',
+  ENGLISH: 'bg-cyan-100 text-cyan-700',
+  LIFESTYLE: 'bg-emerald-100 text-emerald-700',
 }
 const categoryLabels: Record<string, string> = {
   IT: 'IT',
@@ -61,12 +61,12 @@ export default async function BlogPostPage({ params }: Props) {
       <div className="min-h-screen pt-24 pb-20 overflow-x-hidden">
         <article className="max-w-3xl mx-auto px-6">
           {/* Breadcrumb */}
-          <nav className="mb-6 text-sm font-mono text-white/30" aria-label="Breadcrumb">
-            <Link href="/blog" className="hover:text-white/60 transition-colors">
+          <nav className="mb-6 text-sm font-mono text-slate-400" aria-label="Breadcrumb">
+            <Link href="/blog" className="hover:text-slate-600 transition-colors">
               Blog
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-white/60 truncate">{post.title}</span>
+            <span className="text-slate-600 truncate">{post.title}</span>
           </nav>
 
           {/* Header */}
@@ -74,24 +74,24 @@ export default async function BlogPostPage({ params }: Props) {
             <div className="flex items-center gap-3 mb-4 flex-wrap">
               {post.category && (
                 <span
-                  className={`text-xs font-mono px-2 py-0.5 rounded-full ${categoryColors[post.category] ?? 'bg-white/10 text-white/60'}`}
+                  className={`text-xs font-mono px-2 py-0.5 rounded-full ${categoryColors[post.category] ?? 'bg-slate-100 text-slate-500'}`}
                 >
                   {categoryLabels[post.category] ?? post.category}
                 </span>
               )}
               {post.readTime > 0 && (
-                <span className="text-xs font-mono text-white/30">
+                <span className="text-xs font-mono text-slate-400">
                   {post.readTime} min read
                 </span>
               )}
             </div>
 
-            <h1 className="font-display text-4xl md:text-5xl font-bold text-white leading-tight">
+            <h1 className="font-display text-4xl md:text-5xl font-bold text-slate-800 leading-tight">
               {post.title}
             </h1>
 
             {post.createdAt && (
-              <time className="mt-4 block text-sm font-mono text-white/30">
+              <time className="mt-4 block text-sm font-mono text-slate-400">
                 {new Date(post.createdAt).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
@@ -101,7 +101,7 @@ export default async function BlogPostPage({ params }: Props) {
             )}
 
             {post.excerpt && (
-              <p className="mt-6 text-lg text-white/60 font-body leading-relaxed border-l-2 border-violet-500 pl-5">
+              <p className="mt-6 text-lg text-slate-500 font-body leading-relaxed border-l-2 border-violet-500 pl-5">
                 {post.excerpt}
               </p>
             )}
@@ -122,15 +122,15 @@ export default async function BlogPostPage({ params }: Props) {
           {post.content ? (
             <ContentRenderer
               html={applyHighlighting(post.content)}
-              className="prose prose-invert prose-headings:font-display prose-p:font-body prose-code:font-mono max-w-none prose-p:text-white/70 prose-headings:text-white prose-a:text-violet-400 prose-a:no-underline hover:prose-a:underline prose-code:bg-[#111E34] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-pre:bg-[#0d1117] prose-pre:border prose-pre:border-white/10 prose-img:rounded-xl prose-blockquote:border-violet-500 prose-blockquote:text-white/60 public-content"
+              className="prose prose-headings:font-display prose-p:font-body prose-code:font-mono max-w-none prose-p:text-slate-600 prose-headings:text-slate-800 prose-a:text-violet-600 prose-a:no-underline hover:prose-a:underline prose-code:bg-slate-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-pre:bg-[#F8FAFC] prose-pre:border prose-pre:border-slate-200 prose-img:rounded-xl prose-blockquote:border-violet-500 prose-blockquote:text-slate-500 public-content"
             />
           ) : (
-            <p className="text-white/40 font-body italic">Content coming soon.</p>
+            <p className="text-slate-400 font-body italic">Content coming soon.</p>
           )}
 
           {/* Share */}
-          <div className="mt-16 pt-8 border-t border-white/10 flex items-center gap-4">
-            <span className="text-sm font-mono text-white/40">Share:</span>
+          <div className="mt-16 pt-8 border-t border-slate-200 flex items-center gap-4">
+            <span className="text-sm font-mono text-slate-400">Share:</span>
             <ShareButton />
           </div>
         </article>
@@ -138,7 +138,7 @@ export default async function BlogPostPage({ params }: Props) {
         {/* Related posts */}
         {related.length > 0 && (
           <section className="max-w-6xl mx-auto px-6 mt-20">
-            <h2 className="font-display text-2xl font-bold text-white mb-6">
+            <h2 className="font-display text-2xl font-bold text-slate-800 mb-6">
               Related Posts
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

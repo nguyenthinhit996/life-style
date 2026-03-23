@@ -57,8 +57,8 @@ export default function BlogListingClient({ seriesWithCount, posts }: Props) {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-10">
-          <h1 className="font-display text-4xl md:text-5xl font-bold text-white">Blog</h1>
-          <p className="mt-3 text-white/50 font-body">
+          <h1 className="font-display text-4xl md:text-5xl font-bold text-[#0F172A]">Blog</h1>
+          <p className="mt-3 text-slate-500 font-body">
             Tutorial series, lessons, and standalone articles on Code, English, and Life.
           </p>
         </div>
@@ -74,7 +74,7 @@ export default function BlogListingClient({ seriesWithCount, posts }: Props) {
                   'px-4 py-2.5 rounded-full text-sm font-mono transition-colors duration-150',
                   category === c.value
                     ? 'bg-violet-600 text-white'
-                    : 'bg-[#0C1524] border border-white/10 text-white/60 hover:text-white hover:border-white/30',
+                    : 'bg-white border border-slate-200 text-slate-500 hover:text-violet-600 hover:border-violet-300',
                 )}
               >
                 {c.label}
@@ -87,16 +87,16 @@ export default function BlogListingClient({ seriesWithCount, posts }: Props) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             aria-label="Search series and posts"
-            className="flex-1 min-w-0 px-4 py-2 rounded-xl bg-[#0C1524] border border-white/10 text-white/80 placeholder-white/30 text-sm font-body focus:outline-none focus:border-violet-500/50 transition-colors"
+            className="flex-1 min-w-0 px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm font-body focus:outline-none focus:border-violet-500/50 transition-colors"
           />
         </div>
 
         {/* Tutorial Series */}
         {filteredSeries.length > 0 && (
           <section className="mb-16">
-            <h2 className="font-display text-2xl font-bold text-white mb-6">
+            <h2 className="font-display text-2xl font-bold text-[#0F172A] mb-6">
               Tutorial Series
-              <span className="ml-2 text-sm font-mono text-white/30 font-normal">
+              <span className="ml-2 text-sm font-mono text-slate-400 font-normal">
                 ({filteredSeries.length})
               </span>
             </h2>
@@ -111,9 +111,9 @@ export default function BlogListingClient({ seriesWithCount, posts }: Props) {
         {/* Blog Posts */}
         {filteredPosts.length > 0 && (
           <section>
-            <h2 className="font-display text-2xl font-bold text-white mb-6">
+            <h2 className="font-display text-2xl font-bold text-[#0F172A] mb-6">
               Blog Posts
-              <span className="ml-2 text-sm font-mono text-white/30 font-normal">
+              <span className="ml-2 text-sm font-mono text-slate-400 font-normal">
                 ({filteredPosts.length})
               </span>
             </h2>

@@ -13,14 +13,14 @@ export default function ShareButton() {
   return (
     <button
       onClick={copyLink}
-      className="inline-flex items-center gap-1.5 text-sm font-mono text-violet-400 hover:text-violet-300 transition-colors"
+      className="inline-flex items-center gap-1.5 text-sm font-mono text-violet-600 hover:text-violet-500 transition-colors"
     >
       {copied ? (
         <>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-green-400">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-green-600">
             <polyline points="20 6 9 17 4 12"/>
           </svg>
-          <span className="text-green-400">Copied!</span>
+          <span className="text-green-600">Copied!</span>
         </>
       ) : (
         <>

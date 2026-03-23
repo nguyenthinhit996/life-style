@@ -32,9 +32,9 @@ export default function ContentRenderer({ html, className }: Props) {
       btn.setAttribute('aria-label', 'Copy code')
       btn.className =
         'absolute top-3 right-3 z-10 flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-mono ' +
-        'bg-white/10 text-white/50 border border-white/10 ' +
+        'bg-slate-100 text-slate-500 border border-slate-200 ' +
         'opacity-0 group-hover/code:opacity-100 transition-all duration-150 ' +
-        'hover:bg-white/20 hover:text-white hover:border-white/30 cursor-pointer select-none'
+        'hover:bg-slate-200 hover:text-slate-700 hover:border-slate-300 cursor-pointer select-none'
       btn.innerHTML = `
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>

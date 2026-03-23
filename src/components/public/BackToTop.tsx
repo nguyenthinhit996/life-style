@@ -18,7 +18,7 @@ export default function BackToTop() {
       aria-label="Back to top"
       className={cn(
         'fixed bottom-8 right-8 z-50 w-10 h-10 rounded-full bg-violet-600 hover:bg-violet-500',
-        'text-white flex items-center justify-center shadow-lg shadow-violet-900/40',
+        'text-white flex items-center justify-center shadow-lg shadow-violet-500/20',
         'transition-all duration-300',
         visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none',
       )}

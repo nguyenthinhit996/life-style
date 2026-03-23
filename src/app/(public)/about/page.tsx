@@ -25,7 +25,7 @@ export default async function AboutPage() {
           <div className="mx-auto mb-6 w-24 h-24 rounded-full bg-gradient-to-br from-violet-500 to-cyan-500 flex items-center justify-center text-4xl font-bold text-white">
             P
           </div>
-          <h1 className="font-display text-4xl md:text-5xl font-bold text-white">
+          <h1 className="font-display text-4xl md:text-5xl font-bold text-slate-800">
             Hi, I&apos;m Peter
           </h1>
           <p className="mt-2 font-mono text-violet-400 text-sm">
@@ -39,7 +39,7 @@ export default async function AboutPage() {
                   href={about.social.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm font-mono text-white/40 hover:text-white/80 transition-colors"
+                  className="text-sm font-mono text-slate-400 hover:text-violet-600 transition-colors"
                 >
                   GitHub →
                 </a>
@@ -49,7 +49,7 @@ export default async function AboutPage() {
                   href={about.social.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm font-mono text-white/40 hover:text-white/80 transition-colors"
+                  className="text-sm font-mono text-slate-400 hover:text-violet-600 transition-colors"
                 >
                   LinkedIn →
                 </a>
@@ -59,7 +59,7 @@ export default async function AboutPage() {
                   href={about.social.twitter}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm font-mono text-white/40 hover:text-white/80 transition-colors"
+                  className="text-sm font-mono text-slate-400 hover:text-violet-600 transition-colors"
                 >
                   Twitter →
                 </a>
@@ -71,13 +71,13 @@ export default async function AboutPage() {
         {/* Bio */}
         {about?.bio ? (
           <section className="mb-12">
-            <p className="text-white/70 font-body text-lg leading-relaxed text-center">
+            <p className="text-slate-600 font-body text-lg leading-relaxed text-center">
               {about.bio}
             </p>
           </section>
         ) : (
           <section className="mb-12">
-            <p className="text-white/70 font-body text-lg leading-relaxed text-center">
+            <p className="text-slate-600 font-body text-lg leading-relaxed text-center">
               I&apos;m a software developer and English enthusiast. I write about Java,
               JavaScript, Python, AI, and effective English for developers.
             </p>
@@ -86,16 +86,16 @@ export default async function AboutPage() {
 
         {/* Skills */}
         <section className="mb-12">
-          <h2 className="font-display text-2xl font-bold text-white text-center mb-8">
+          <h2 className="font-display text-2xl font-bold text-slate-800 text-center mb-8">
             What I Work With
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {skillCategories.map((cat) => (
               <div
                 key={cat.label}
-                className="rounded-2xl bg-[#0C1524] border border-white/10 p-5"
+                className="rounded-2xl bg-white border border-slate-200 p-5"
               >
-                <h3 className="font-mono text-xs text-white/50 uppercase tracking-wider mb-3">
+                <h3 className="font-mono text-xs text-slate-500 uppercase tracking-wider mb-3">
                   {cat.label}
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -103,7 +103,7 @@ export default async function AboutPage() {
                     (skill) => (
                       <span
                         key={skill}
-                        className="text-xs font-mono px-2.5 py-1 rounded-full bg-violet-500/15 text-violet-300 border border-violet-500/20"
+                        className="text-xs font-mono px-2.5 py-1 rounded-full bg-violet-50 text-violet-600 border border-violet-200"
                       >
                         {skill}
                       </span>
@@ -118,14 +118,14 @@ export default async function AboutPage() {
         {/* All skills chips */}
         {about?.skills && about.skills.length > 0 && (
           <section className="mb-12">
-            <h2 className="font-display text-xl font-bold text-white text-center mb-5">
+            <h2 className="font-display text-xl font-bold text-slate-800 text-center mb-5">
               All Skills
             </h2>
             <div className="flex flex-wrap justify-center gap-2">
               {about.skills.map((skill) => (
                 <span
                   key={skill}
-                  className="text-sm font-mono px-3 py-1.5 rounded-full bg-[#0C1524] border border-white/10 text-white/70"
+                  className="text-sm font-mono px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600"
                 >
                   {skill}
                 </span>
@@ -136,7 +136,7 @@ export default async function AboutPage() {
 
         {/* CTA */}
         <section className="text-center">
-          <p className="text-white/50 font-body mb-4">
+          <p className="text-slate-500 font-body mb-4">
             Want to see what I&apos;ve been writing about?
           </p>
           <a

@@ -19,7 +19,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <header className="relative sticky top-0 z-50 border-b border-[#334155]/50 bg-[#0C1524]/80 backdrop-blur-md">
+    <header className="relative sticky top-0 z-50 border-b border-[#E2E8F0] bg-[#F8FAFC]/85 backdrop-blur-md after:absolute after:bottom-[-2px] after:left-0 after:right-0 after:h-[2px] after:bg-gradient-to-r after:from-violet-500 after:to-cyan-400 after:opacity-60">
       <div className="mx-auto flex h-16 max-w-6xl items-center px-4 sm:px-6">
         {/* Logo */}
         <Link
@@ -45,8 +45,8 @@ export default function Navbar() {
               className={cn(
                 'rounded-md px-3 py-1.5 text-base font-medium transition-colors',
                 pathname === href || pathname.startsWith(href + '/')
-                  ? 'bg-[#7C3AED]/15 text-violet-300'
-                  : 'text-[#94A3B8] hover:bg-[#334155]/40 hover:text-[#F8FAFC]',
+                  ? 'bg-violet-50 text-violet-600'
+                  : 'text-slate-500 hover:bg-violet-50 hover:text-violet-600',
               )}
             >
               {label}
@@ -56,7 +56,7 @@ export default function Navbar() {
 
         {/* Mobile menu button */}
         <button
-          className="ml-auto rounded-md p-2 text-[#94A3B8] hover:bg-[#334155]/40 hover:text-[#F8FAFC] sm:hidden"
+          className="ml-auto rounded-md p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800 sm:hidden"
           onClick={() => setMobileOpen((v) => !v)}
           aria-label="Toggle menu"
         >
@@ -69,7 +69,7 @@ export default function Navbar() {
 
       {/* Mobile nav */}
       {mobileOpen && (
-        <nav className="border-t border-[#334155]/50 bg-[#0C1524] px-4 py-3 sm:hidden">
+        <nav className="border-t border-[#E2E8F0] bg-white px-4 py-3 sm:hidden">
           {navLinks.map(({ href, label }) => (
             <Link
               key={href}
@@ -78,8 +78,8 @@ export default function Navbar() {
               className={cn(
                 'block rounded-md px-3 py-2 text-base font-medium transition-colors',
                 pathname === href || pathname.startsWith(href + '/')
-                  ? 'bg-[#7C3AED]/15 text-violet-300'
-                  : 'text-[#94A3B8] hover:bg-[#334155]/40 hover:text-[#F8FAFC]',
+                  ? 'bg-violet-50 text-violet-600'
+                  : 'text-slate-500 hover:bg-violet-50 hover:text-violet-600',
               )}
             >
               {label}

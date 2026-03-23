@@ -8,7 +8,7 @@ const footerLinks = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-[#334155]/50 bg-[#0C1524]">
+    <footer className="border-t border-[#E2E8F0] bg-white">
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
           {/* Brand */}
@@ -16,7 +16,7 @@ export default function Footer() {
             <span className="bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text font-display text-base font-bold tracking-tight text-transparent">
               life·style
             </span>
-            <p className="text-xs text-[#94A3B8]">
+            <p className="text-xs text-slate-500">
               Tutorials on Code &amp; Language
             </p>
           </div>
@@ -27,7 +27,7 @@ export default function Footer() {
               <Link
                 key={href}
                 href={href}
-                className="text-sm text-[#94A3B8] transition-colors hover:text-[#F8FAFC]"
+                className="text-sm text-slate-500 transition-colors hover:text-slate-800"
               >
                 {label}
               </Link>
@@ -37,14 +37,14 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
-              className="text-[#94A3B8] transition-colors hover:text-[#F8FAFC]"
+              className="text-slate-500 transition-colors hover:text-slate-800"
             >
               <Github size={16} />
             </a>
           </nav>
         </div>
 
-        <p className="mt-6 text-center text-xs text-[#475569]">
+        <p className="mt-6 text-center text-xs text-slate-400">
           © {new Date().getFullYear()} life·style · Built with Next.js
         </p>
       </div>

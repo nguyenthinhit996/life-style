@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { getPublishedSeries, getBlogPosts, getPosts } from '@/lib/db'
+
+export const dynamic = 'force-dynamic'
 import BlogListingClient from '@/components/public/BlogListingClient'
 
 export const metadata: Metadata = {

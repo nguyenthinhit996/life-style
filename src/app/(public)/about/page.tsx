@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { getAbout } from '@/lib/db'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'About — Life-Style',
   description: "Learn more about Peter — the developer and English enthusiast behind life·style.",

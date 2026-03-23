@@ -1,4 +1,7 @@
 import type { Metadata } from 'next'
+
+export const dynamic = 'force-dynamic'
+
 import Navbar from '@/components/public/Navbar'
 import Footer from '@/components/public/Footer'
 import HeroSection from '@/components/public/HeroSection'

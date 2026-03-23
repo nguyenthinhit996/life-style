@@ -2,35 +2,34 @@
 
 > Strategy: **Launch fast with basics → then improve.** Build the minimum working version first, then layer in more features.
 
+> **Last reviewed: March 12, 2026** — Phases 0–4 complete. Phase 5 mostly done. Phase 6 partial. Phases 7–10 not started.
+
 ---
 
-## Phase 0 — Preparation (Day 1)
+## Phase 0 — Preparation ✅ Complete
 
 > Set up everything before writing a single line of app code.
 
 ### Steps
 
-- [ ] Create a new Next.js project with TypeScript
-  ```bash
-  npx create-next-app@latest life-style --typescript --tailwind --eslint --app --src-dir
-  ```
-- [ ] Clean up default boilerplate files
-- [ ] Set up folder structure (see `03-architecture.md`)
-- [ ] Install core dependencies:
+- [x] Create a new Next.js project with TypeScript
+- [x] Clean up default boilerplate files
+- [x] Set up folder structure (see `03-architecture.md`)
+- [x] Install core dependencies:
   - `firebase` — Firebase SDK (installed now, used later)
   - `next-auth` — admin authentication
   - `@tiptap/react` — rich text editor for the dashboard
   - `lucide-react` — icons
   - `clsx` + `tailwind-merge` — class utilities
-- [ ] Initialize a Git repository and push to GitHub
-- [ ] Create `.env.local` with placeholders for environment variables
+- [x] Initialize a Git repository and push to GitHub
+- [x] Create `.env.local` with environment variables (`AUTH_SECRET`, `NEXTAUTH_URL`, `DB_PROVIDER`, Firebase placeholders)
 
 ### Output
 A clean, runnable Next.js + Tailwind project on GitHub.
 
 ---
 
-## Phase 1 — Mock Data Setup (Day 1–2)
+## Phase 1 — Mock Data Setup ✅ Complete
 
 > Define your data shape using local JSON files. No internet, no account needed.
 
@@ -48,23 +47,21 @@ Blog Post  (standalone, no series)
 
 ### Steps
 
-- [ ] Create `db/series.json` — list of tutorial series
-- [ ] Create `db/chapters.json` — chapters within each series (`seriesId` reference)
-- [ ] Create `db/posts.json` — lessons (`seriesId + chapterId`) and standalone blog posts
-- [ ] Create `db/users.json` — one admin user for login testing
-- [ ] Create `src/lib/db/mock.ts` — functions to read and filter JSON data:
-  - `getPosts()`, `getPostBySlug()`, `getPublishedPosts()`
-  - `getSeries()`, `getSeriesById()`
-  - `getChaptersBySeries()`, `getLessonsByChapter()`
-- [ ] Create `src/lib/db/index.ts` — exports from mock (swap to Firebase later)
-- [ ] Define shared TypeScript types in `src/types/index.ts`
+- [x] Create `db/series.json` — list of tutorial series
+- [x] Create `db/chapters.json` — chapters within each series (`seriesId` reference)
+- [x] Create `db/posts.json` — lessons (`seriesId + chapterId`) and standalone blog posts
+- [x] Create `db/users.json` — one admin user for login testing
+- [x] Create `src/lib/db/mock.ts` — full CRUD functions with in-memory store + JSON persistence
+- [x] Create `src/lib/db/index.ts` — re-exports from mock (swap to Firebase later)
+- [x] Define shared TypeScript types in `src/types/index.ts`
 
-### Firebase Migration (Later — Phase 7+)
+### Firebase Migration (Phase 7)
 
 - [ ] Create Firebase project at console.firebase.google.com
 - [ ] Enable Firestore database
 - [ ] Create `src/lib/db/firebase.ts` with the same function signatures as `mock.ts`
-- [ ] Change one line in `src/lib/db/index.ts`: `export * from './firebase'`
+- [ ] In `src/lib/db/index.ts`: change `export * from './mock'` → `export * from './firebase'`
+- [ ] Set `DB_PROVIDER=firebase` in `.env.local` (and Vercel env vars)
 - [ ] Upload mock JSON data to Firestore
 
 ### Output
@@ -72,172 +69,113 @@ All data available locally with zero setup. Ready to build UI on top immediately
 
 ---
 
-## Phase 2 — Admin Authentication (Day 2–3)
+## Phase 2 — Admin Authentication ✅ Complete
 
 > Lock down the dashboard so only Peter can access it.
 
 ### Steps
 
-- [ ] Set up **NextAuth.js** with Credentials provider (email + password)
-- [ ] Add login page at `/admin/login`
-  - Bold, clean form with email + password fields
-  - Show error on wrong credentials
-- [ ] Protect all `/admin/*` routes using Next.js middleware
-  - Redirect unauthenticated users to `/admin/login`
-- [ ] Implement logout functionality
-- [ ] Store hashed passwords using `bcryptjs`
+- [x] Set up **NextAuth.js v5** with Credentials provider (email + password)
+- [x] Add login page at `/admin/login`
+- [x] Protect all `/admin/*` routes using Next.js middleware (`src/middleware.ts`)
+  - Redirects unauthenticated users to `/admin/login`
+  - Redirects logged-in users away from login page
+- [x] Implement logout functionality
+- [x] Store hashed passwords using `bcryptjs`
+- [x] `AUTH_SECRET` correctly set in `.env.local` (NextAuth v5 requirement)
+- [x] All mutating API routes (`POST`, `PUT`, `DELETE`) check `auth()` session
 
 ### Output
 A working login system — only Peter can reach the dashboard.
 
 ---
 
-## Phase 3 — Admin Dashboard (Day 3–6)
+## Phase 3 — Admin Dashboard ✅ Complete
 
 > Build the private dashboard to create and manage blog posts.
 
 ### Steps
 
-- [ ] Build the admin layout (`/admin`):
-  - Sidebar with navigation: All Posts, New Post, Series, Chapters, About Page, Settings
-  - Header with user info and logout button
-- [ ] **Posts List Page** (`/admin/posts`):
-  - Table of all posts (title, type: lesson/blog, category, status, date)
-  - Published / Draft toggle
-  - Edit and Delete buttons per post
-- [ ] **New Post Page** (`/admin/posts/new`):
-  - Title input
-  - Slug input (auto-generated from title, editable)
-  - Type selector: Blog Post vs Lesson
-  - If Lesson: Series selector + Chapter selector
-  - Category selector (IT / English / Lifestyle)
-  - Excerpt textarea
-  - **TipTap rich text editor** for full post content
-  - Cover image upload (store URL or use file upload)
-  - Published toggle
-  - Save / Publish button
-- [ ] **Edit Post Page** (`/admin/posts/[id]/edit`):
-  - Same form as New Post, pre-filled with existing data
-- [ ] **Delete Post**:
-  - Confirmation dialog before deleting
-- [ ] **Series List Page** (`/admin/series`):
-  - Table of all series (icon, title, category, tags, status, chapters count)
-  - Create / Edit / Delete buttons
-- [ ] **New / Edit Series Page** (`/admin/series/new` + `/admin/series/[id]/edit`):
-  - Title, slug, description
-  - Category selector
-  - Tags input (comma-separated)
-  - Icon (emoji picker or text input), Color selector
-  - Level selector (Beginner / Intermediate / Advanced)
-  - Published toggle
-- [ ] **Chapters Page** (`/admin/chapters`):
-  - Filter by Series dropdown
-  - Table of chapters for selected series (title, order, lesson count)
-  - Create / Edit / Delete buttons
-- [ ] **About Page Editor** (`/admin/about`):
-  - Edit bio text, skills, and social links stored as JSON
-  - Save button to persist changes
-- [ ] Build API routes (Next.js Route Handlers) for:
-  - `GET /api/posts` — list all posts
-  - `POST /api/posts` — create post or lesson
-  - `PUT /api/posts/[id]` — update post/lesson
-  - `DELETE /api/posts/[id]` — delete post/lesson
-  - `GET /api/series` — list all series
-  - `POST /api/series` — create series
-  - `PUT /api/series/[id]` — update series
-  - `DELETE /api/series/[id]` — delete series
-  - `GET /api/chapters` — list chapters (filter by seriesId)
-  - `POST /api/chapters` — create chapter
-  - `PUT /api/chapters/[id]` — update chapter
-  - `DELETE /api/chapters/[id]` — delete chapter
+- [x] Admin layout (`/admin`) with Sidebar + user info
+- [x] **Posts List Page** (`/admin/posts`) — table, published toggle, edit/delete
+- [x] **New Post Page** (`/admin/posts/new`) — full form with TipTap editor, emoji/image pickers
+- [x] **Edit Post Page** (`/admin/posts/[id]/edit`) — pre-filled form
+- [x] **Delete Post** — `ConfirmDialog` confirmation before deleting
+- [x] **Series List Page** (`/admin/series`) — table with CRUD
+- [x] **New / Edit Series Page** (`/admin/series/new` + `/admin/series/[id]/edit`)
+- [x] **Chapters Page** (`/admin/chapters`) — filter by series, CRUD
+- [x] **About Page Editor** (`/admin/about`) — edit bio, skills, social links
+- [x] All API routes:
+  - `GET/POST /api/posts`, `PUT/DELETE /api/posts/[id]`
+  - `GET/POST /api/series`, `PUT/DELETE /api/series/[id]`
+  - `GET/POST /api/chapters`, `PUT/DELETE /api/chapters/[id]`
+  - `GET/PUT /api/about`
+  - `POST /api/auth/[...nextauth]`
 
 ### Output
 Fully working dashboard — Peter can write, edit, publish, and delete posts.
 
 ---
 
-## Phase 4 — Public Website (Day 6–10)
+## Phase 4 — Public Website ✅ Complete
 
 > Build the pages visitors will see.
 
 ### Steps
 
-- [ ] **Home Page** (`/`):
-  - Bold hero section with Peter's name, tagline, and a CTA button
-  - Featured blog posts section (latest 3 posts)
-  - Categories section (IT / English / Lifestyle cards)
-  - Mini About teaser with link to full About page
-- [ ] **About Page** (`/about`):
-  - Personal photo + name + title
-  - Bio / story section
-  - Skills section (tech stack, English proficiency, etc.)
-  - Links to GitHub, LinkedIn, social media
-- [ ] **Blog Listing Page** (`/blog`):
-  - Grid of post cards + series cards
-  - Level 1 filter: All / IT / English / Lifestyle
-  - Level 2 filter (IT): Java / JavaScript / Python / AI
-  - Search bar to find posts by keyword
-- [ ] **Series Detail Page** (`/blog/series/[seriesId]`):
-  - Series banner: icon, title, description, level badge, tags
-  - Chapter/lesson tree (collapsible, shows progress)
-  - "Start Learning" CTA to first lesson
-- [ ] **Lesson Reader Page** (`/blog/series/[seriesId]/[chapterId]/[slug]`):
-  - Left sidebar: chapter/lesson tree for current series
-  - Main: lesson title, content, code blocks w/ syntax highlighting
-  - Bottom nav: Previous Lesson ← → Next Lesson
-  - Series breadcrumb: Series → Chapter → Lesson
-- [ ] **Blog Post Page** (`/blog/[slug]`):
-  - Full post content rendered from database
-  - Cover image, title, category badge, date
-  - Share buttons (copy link, social share)
-  - Related posts section at the bottom
-- [ ] **404 Page** — custom not-found page with navigation back to home
+- [x] **Home Page** (`/`) — hero, featured posts, categories section, metadata + Open Graph
+- [x] **About Page** (`/about`) — bio, skills, social links, metadata
+- [x] **Blog Listing Page** (`/blog`) — post/series cards, category filter, search, metadata
+- [x] **Series Detail Page** (`/blog/series/[seriesId]`) — banner, chapter tree, CTA, `generateMetadata`
+- [x] **Lesson Reader Page** (`/blog/series/[seriesId]/[chapterId]/[slug]`) — sidebar tree, content, lesson nav, breadcrumb, `generateMetadata`
+- [x] **Blog Post Page** (`/blog/[slug]`) — full content, share button, metadata + Open Graph
+- [x] **404 Page** (`not-found.tsx`) — custom not-found with nav back to home
 
 ### Output
 A fully navigable public website with real content.
 
 ---
 
-## Phase 5 — Design Polish (Day 10–12)
+## Phase 5 — Design Polish ✅ Mostly Complete
 
 > Make it look bold, colorful, and professional.
 
 ### Steps
 
-- [ ] Define a color palette — primary accent color + secondary, with dark backgrounds
-- [ ] Set up custom Tailwind theme in `tailwind.config.ts`
-- [ ] Add consistent typography (e.g., Google Fonts — bold display font for headings)
-- [ ] Add **Dark / Light mode** toggle using Tailwind's `dark:` classes + `next-themes`
-- [ ] Add subtle animations and transitions:
-  - Hover effects on cards and buttons
-  - Page entrance animations using CSS or `framer-motion`
-- [ ] Make all pages fully responsive (mobile, tablet, desktop)
-- [ ] Polish the admin dashboard UI to match the brand
+- [x] Dark color palette — navy/violet/cyan accent theme
+- [x] Custom Tailwind theme configured
+- [x] Typography — display font for headings, consistent text scale
+- [ ] **Dark / Light mode toggle** — not implemented; site is dark-only (needs `next-themes`)
+- [x] Animations — `PageTransition`, `NavRabbit` (running rabbit), `NavGrass` (flowers), `BackToTop`, hover effects
+- [x] Fully responsive — mobile menu, responsive grid layouts
+- [x] `ReadingProgressBar` on post pages
 
 ### Output
 A visually impressive, on-brand website that works on all devices.
 
 ---
 
-## Phase 6 — SEO & Performance (Day 12–13)
+## Phase 6 — SEO & Performance ⚠️ Partial
 
 > Make the website discoverable and fast.
 
 ### Steps
 
-- [ ] Add dynamic `metadata` to every page (title, description) using Next.js Metadata API
-- [ ] Add Open Graph images for social sharing previews
-- [ ] Generate a sitemap using `next-sitemap`
-- [ ] Add `robots.txt`
-- [ ] Optimize images using Next.js `<Image>` component
-- [ ] Audit with Lighthouse — target 90+ score on Performance, SEO, Accessibility
+- [x] `metadata` export on all static public pages (home, about, blog)
+- [x] `generateMetadata` on all dynamic pages (blog post, series, lesson)
+- [x] Open Graph tags on home and blog post pages
+- [ ] **Open Graph images missing** on `/about`, `/blog`, `/blog/series/[id]`, `/blog/series/[id]/[chapterId]/[slug]`
+- [ ] **Sitemap** — no `sitemap.ts` or `next-sitemap` setup yet
+- [ ] **`robots.txt`** — not created yet (Next.js 14 can auto-generate via `src/app/robots.ts`)
+- [ ] **`next/image`** — cover images use `<img>` tags; switch to `<Image>` for automatic optimization
+- [ ] Lighthouse audit — target 90+ on Performance, SEO, Accessibility
 
 ### Output
 A site that ranks well on Google and looks great when shared on social media.
 
 ---
 
-## Phase 7 — Deploy (Day 13–14)
+## Phase 7 — Deploy ❌ Not Started
 
 > Get the site live on the internet.
 
@@ -245,17 +183,17 @@ A site that ranks well on Google and looks great when shared on social media.
 
 - [ ] Push all code to GitHub
 - [ ] Create a [Vercel](https://vercel.com) account and connect the GitHub repository
-- [ ] Switch the data layer from mock to Firebase:
-  - In `src/lib/db/index.ts` change `export * from './mock'` → `export * from './firebase'`
+- [ ] Switch data layer:
+  - Implement `src/lib/db/firebase.ts` (same function signatures as `mock.ts`)
+  - In `src/lib/db/index.ts`: change `export * from './mock'` → `export * from './firebase'`
 - [ ] Add all environment variables in Vercel dashboard:
-  - `NEXTAUTH_SECRET`
-  - `NEXTAUTH_URL` (your production domain)
-  - `NEXT_PUBLIC_FIREBASE_API_KEY`
-  - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
-  - (and all other Firebase vars from `03-architecture.md`)
+  - `AUTH_SECRET`
+  - `NEXTAUTH_URL` (production domain)
+  - `DB_PROVIDER=firebase`
+  - `NEXT_PUBLIC_FIREBASE_API_KEY` + all other Firebase vars
 - [ ] Upload seed data to Firestore (copy from `db/*.json`)
 - [ ] Verify the site works end-to-end in production
-- [ ] Connect a custom domain (e.g., `peterblog.com`)
+- [ ] Connect a custom domain
 
 ### Output
 The website is live at a custom domain — accessible to anyone in the world.
@@ -277,14 +215,18 @@ These are features to add once the site is live:
 
 ## Summary Timeline
 
-| Phase | Focus | Target |
+| Phase | Focus | Status |
 |-------|-------|--------|
-| 0 | Setup & tooling | Day 1 |
-| 1 | Database | Day 1–2 |
-| 2 | Auth / Login | Day 2–3 |
-| 3 | Admin Dashboard | Day 3–6 |
-| 4 | Public Website | Day 6–10 |
-| 5 | Design Polish | Day 10–12 |
-| 6 | SEO & Performance | Day 12–13 |
-| 7 | Deploy | Day 13–14 |
-| 8 | Improvements | Ongoing |
+| 0 | Setup & tooling | ✅ Complete |
+| 1 | Database (mock) | ✅ Complete |
+| 2 | Auth / Login | ✅ Complete |
+| 3 | Admin Dashboard | ✅ Complete |
+| 4 | Public Website | ✅ Complete |
+| 5 | Design Polish | ✅ Mostly done (no light mode) |
+| 6 | SEO & Performance | ⚠️ Partial (missing sitemap, robots, OG images, next/image) |
+| 7 | Deploy + Firebase | ❌ Not started |
+| 8 | Improvements | ❌ Not started |
+
+
+---
+

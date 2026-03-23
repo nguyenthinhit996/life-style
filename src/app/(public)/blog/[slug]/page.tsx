@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getPostBySlug, getPostsByCategory } from '@/lib/db'
+
+export const dynamic = 'force-dynamic'
 import ReadingProgressBar from '@/components/public/ReadingProgressBar'
 import PostCard from '@/components/public/PostCard'
 import BackToTop from '@/components/public/BackToTop'

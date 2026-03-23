@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getSeriesTree, getPostBySlug } from '@/lib/db'
+
+export const dynamic = 'force-dynamic'
 import ChapterTree from '@/components/public/ChapterTree'
 import LessonNav from '@/components/public/LessonNav'
 import ReadingProgressBar from '@/components/public/ReadingProgressBar'

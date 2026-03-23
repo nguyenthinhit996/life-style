@@ -24,10 +24,10 @@ export default function Navbar() {
         {/* Logo */}
         <Link
           href="/"
-          className="flex shrink-0 items-center gap-2 font-display text-lg font-bold tracking-tight"
+          className="flex shrink-0 items-center gap-2 font-display text-2xl font-bold tracking-tight"
         >
           <span className="bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">
-            life·style
+            Life·style
           </span>
         </Link>
 
@@ -43,7 +43,7 @@ export default function Navbar() {
               key={href}
               href={href}
               className={cn(
-                'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+                'rounded-md px-3 py-1.5 text-base font-medium transition-colors',
                 pathname === href || pathname.startsWith(href + '/')
                   ? 'bg-[#7C3AED]/15 text-violet-300'
                   : 'text-[#94A3B8] hover:bg-[#334155]/40 hover:text-[#F8FAFC]',
@@ -76,7 +76,7 @@ export default function Navbar() {
               href={href}
               onClick={() => setMobileOpen(false)}
               className={cn(
-                'block rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                'block rounded-md px-3 py-2 text-base font-medium transition-colors',
                 pathname === href || pathname.startsWith(href + '/')
                   ? 'bg-[#7C3AED]/15 text-violet-300'
                   : 'text-[#94A3B8] hover:bg-[#334155]/40 hover:text-[#F8FAFC]',

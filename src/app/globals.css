@@ -162,41 +162,32 @@ body {
   color: #24292F;
   font-size: inherit;
 }
-.public-content table {
-  display: block;
-  overflow-x: auto;
-  max-width: 100%;
-}
-/* ── Table styles (editor + public) ── */
-.ProseMirror table,
-.public-content table {
+/* ── Table styles — editor (dark) ── */
+.ProseMirror table {
   border-collapse: collapse;
   width: 100%;
   margin: 1.25rem 0;
   font-size: 0.9rem;
 }
 .ProseMirror table td,
-.ProseMirror table th,
-.public-content table td,
-.public-content table th {
-  border: 1px solid #CBD5E1;
+.ProseMirror table th {
+  border: 1px solid rgba(255,255,255,0.12);
   padding: 0.5rem 0.75rem;
   vertical-align: top;
   min-width: 80px;
+  color: #cbd5e1;
 }
-.ProseMirror table th,
-.public-content table th {
-  background: #F1F5F9;
+.ProseMirror table th {
+  background: rgba(255,255,255,0.06);
   font-weight: 600;
   text-align: left;
+  color: #e2e8f0;
 }
-.ProseMirror table tr:nth-child(even) td,
-.public-content table tr:nth-child(even) td {
-  background: #F8FAFC;
+.ProseMirror table tr:nth-child(even) td {
+  background: rgba(255,255,255,0.02);
 }
-/* Selected cell highlight in editor */
 .ProseMirror .selectedCell {
-  background: #EDE9FE;
+  background: rgba(124,58,237,0.25) !important;
 }
 .ProseMirror .column-resize-handle {
   position: absolute;
@@ -206,6 +197,32 @@ body {
   width: 4px;
   background: #7C3AED;
   pointer-events: none;
+}
+
+/* ── Table styles — public (light) ── */
+.public-content table {
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.25rem 0;
+  font-size: 0.9rem;
+}
+.public-content table td,
+.public-content table th {
+  border: 1px solid #CBD5E1;
+  padding: 0.5rem 0.75rem;
+  vertical-align: top;
+  min-width: 80px;
+}
+.public-content table th {
+  background: #F1F5F9;
+  font-weight: 600;
+  text-align: left;
+}
+.public-content table tr:nth-child(even) td {
+  background: #F8FAFC;
 }
 .public-content img {
   max-width: 100%;

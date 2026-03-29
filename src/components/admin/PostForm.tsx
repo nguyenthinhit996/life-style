@@ -5,6 +5,7 @@ import { applyHighlighting } from '@/lib/highlight'
 import type { Post, Series, Chapter } from '@/types'
 import RichEditor from '@/components/admin/RichEditor'
 import ImagePickerModal from '@/components/admin/ImagePickerModal'
+import EmojiPickerModal from '@/components/admin/EmojiPickerModal'
 import { slugify } from '@/lib/utils'
 
 type PostFormProps = {
@@ -26,6 +27,8 @@ export default function PostForm({ initialData = {}, allSeries }: PostFormProps)
   const [excerpt, setExcerpt]       = useState(initialData.excerpt ?? '')
   const [coverImage, setCoverImage] = useState(initialData.coverImage ?? '')
   const [showCoverPicker, setShowCoverPicker] = useState(false)
+  const [icon, setIcon]             = useState(initialData.icon ?? '')
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const [content, setContent]       = useState(initialData.content ?? '')
   const [published, setPublished]   = useState(initialData.published ?? false)
   const [saving, setSaving]         = useState(false)
@@ -53,7 +56,7 @@ export default function PostForm({ initialData = {}, allSeries }: PostFormProps)
       title, slug, type,
       seriesId: type === 'lesson' ? seriesId : null,
       chapterId: type === 'lesson' ? chapterId : null,
-      category, excerpt, coverImage, content,
+      icon, category, excerpt, coverImage, content,
       tags: [],
       published: publish,
       order: initialData.order ?? 0,
@@ -72,18 +75,29 @@ export default function PostForm({ initialData = {}, allSeries }: PostFormProps)
   const readTime  = Math.max(1, Math.ceil(wordCount / 200))
 
   return (
+    <>
     <div className="flex gap-6">
 
       {/* ── Left: main editor column ── */}
       <div className="flex min-w-0 flex-1 flex-col gap-5">
 
-        {/* Title */}
-        <input
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-          placeholder="Post title…"
-          className="w-full rounded-xl border border-white/[0.08] bg-[#0C1524] px-5 py-3.5 font-display text-2xl font-bold text-white placeholder-slate-700 outline-none focus:border-violet-500/60 focus:ring-2 focus:ring-violet-500/20"
-        />
+        {/* Title + Icon */}
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setShowEmojiPicker(true)}
+            title="Pick icon"
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-2xl transition hover:border-violet-500/50 hover:bg-white/10"
+          >
+            {icon || <span className="text-slate-600 text-sm">+</span>}
+          </button>
+          <input
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            placeholder="Post title…"
+            className="w-full rounded-xl border border-white/[0.08] bg-[#0C1524] px-5 py-3.5 font-display text-2xl font-bold text-white placeholder-slate-700 outline-none focus:border-violet-500/60 focus:ring-2 focus:ring-violet-500/20"
+          />
+        </div>
 
         {/* Slug row */}
         <div className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] px-4 py-2.5">
@@ -286,6 +300,15 @@ export default function PostForm({ initialData = {}, allSeries }: PostFormProps)
 
       </div>
     </div>
+
+    {showEmojiPicker && (
+      <EmojiPickerModal
+        current={icon}
+        onSelect={(emoji) => { setIcon(emoji); setShowEmojiPicker(false) }}
+        onClose={() => setShowEmojiPicker(false)}
+      />
+    )}
+    </>
   )
 }
 

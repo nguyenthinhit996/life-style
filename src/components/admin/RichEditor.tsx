@@ -30,6 +30,8 @@ import { TableHeader } from '@tiptap/extension-table-header'
 import { TableCell } from '@tiptap/extension-table-cell'
 import { DetailsBlock } from '@/components/admin/extensions/DetailsBlock'
 
+import EmojiPickerModal from '@/components/admin/EmojiPickerModal'
+
 const lowlight = createLowlight(common)
 import { TextStyle } from '@tiptap/extension-text-style'
 import { useEffect, useState, useCallback, useRef, useId } from 'react'
@@ -84,6 +86,7 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
   const [showImagePicker, setShowImagePicker] = useState(false)
   const [showColorPicker, setShowColorPicker] = useState(false)
   const [showTableMenu, setShowTableMenu]   = useState(false)
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const colorPickerRef = useRef<HTMLDivElement>(null)
   const tableMenuRef   = useRef<HTMLDivElement>(null)
 
@@ -468,6 +471,12 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
           🖼
         </Btn>
 
+        {/* Emoji */}
+        <Btn title="Insert emoji" active={showEmojiPicker}
+          onClick={() => { setShowLinkInput(false); setShowEmojiPicker(true) }}>
+          😀
+        </Btn>
+
         {/* Clear formatting */}
         <Btn title="Clear formatting"
           onClick={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}>
@@ -536,6 +545,18 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
         <ImagePickerModal
           onInsert={insertImage}
           onClose={() => setShowImagePicker(false)}
+        />
+      )}
+
+      {/* ── Emoji picker modal ── */}
+      {showEmojiPicker && (
+        <EmojiPickerModal
+          current=""
+          onSelect={(emoji) => {
+            if (emoji) editor.chain().focus().insertContent(emoji).run()
+            setShowEmojiPicker(false)
+          }}
+          onClose={() => setShowEmojiPicker(false)}
         />
       )}
 

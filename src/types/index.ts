@@ -34,6 +34,7 @@ export type Post = {
   slug: string
   excerpt: string
   content: string          // HTML from TipTap
+  icon?: string
   coverImage?: string
   category?: 'IT' | 'ENGLISH' | 'LIFESTYLE'
   tags?: string[]

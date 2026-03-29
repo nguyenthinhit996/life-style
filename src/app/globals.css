@@ -167,6 +167,46 @@ body {
   overflow-x: auto;
   max-width: 100%;
 }
+/* ── Table styles (editor + public) ── */
+.ProseMirror table,
+.public-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.25rem 0;
+  font-size: 0.9rem;
+}
+.ProseMirror table td,
+.ProseMirror table th,
+.public-content table td,
+.public-content table th {
+  border: 1px solid #CBD5E1;
+  padding: 0.5rem 0.75rem;
+  vertical-align: top;
+  min-width: 80px;
+}
+.ProseMirror table th,
+.public-content table th {
+  background: #F1F5F9;
+  font-weight: 600;
+  text-align: left;
+}
+.ProseMirror table tr:nth-child(even) td,
+.public-content table tr:nth-child(even) td {
+  background: #F8FAFC;
+}
+/* Selected cell highlight in editor */
+.ProseMirror .selectedCell {
+  background: #EDE9FE;
+}
+.ProseMirror .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #7C3AED;
+  pointer-events: none;
+}
 .public-content img {
   max-width: 100%;
   height: auto;

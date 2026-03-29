@@ -24,11 +24,15 @@ import Placeholder from '@tiptap/extension-placeholder'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import { common, createLowlight } from 'lowlight'
 import Color from '@tiptap/extension-color'
+import { Table } from '@tiptap/extension-table'
+import { TableRow } from '@tiptap/extension-table-row'
+import { TableHeader } from '@tiptap/extension-table-header'
+import { TableCell } from '@tiptap/extension-table-cell'
 import { DetailsBlock } from '@/components/admin/extensions/DetailsBlock'
 
 const lowlight = createLowlight(common)
 import { TextStyle } from '@tiptap/extension-text-style'
-import { useEffect, useState, useCallback, useRef } from 'react'
+import { useEffect, useState, useCallback, useRef, useId } from 'react'
 import { cn } from '@/lib/utils'
 import ImagePickerModal from '@/components/admin/ImagePickerModal'
 
@@ -79,7 +83,9 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
   const [showLinkInput, setShowLinkInput]   = useState(false)
   const [showImagePicker, setShowImagePicker] = useState(false)
   const [showColorPicker, setShowColorPicker] = useState(false)
+  const [showTableMenu, setShowTableMenu]   = useState(false)
   const colorPickerRef = useRef<HTMLDivElement>(null)
+  const tableMenuRef   = useRef<HTMLDivElement>(null)
 
   const editor = useEditor({
     extensions: [
@@ -94,6 +100,10 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
       ResizableImage.configure({ HTMLAttributes: { class: 'rounded-lg my-4' } }),
       Placeholder.configure({ placeholder: 'Start writing your post…' }),
       DetailsBlock,
+      Table.configure({ resizable: false, HTMLAttributes: { class: 'border-collapse w-full my-4' } }),
+      TableRow,
+      TableHeader,
+      TableCell,
     ],
     content: value,
     immediatelyRender: false,
@@ -136,6 +146,17 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
     if (showColorPicker) document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
   }, [showColorPicker])
+
+  // Close table menu when clicking outside
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (tableMenuRef.current && !tableMenuRef.current.contains(e.target as Node)) {
+        setShowTableMenu(false)
+      }
+    }
+    if (showTableMenu) document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [showTableMenu])
 
   const COLORS = [
     { label: 'Default',   value: '' },
@@ -327,6 +348,67 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
         >
           <span className="text-[11px]">▶ Details</span>
         </Btn>
+
+        <Sep />
+
+        {/* Table */}
+        <div ref={tableMenuRef} className="relative">
+          <Btn title="Table" active={editor.isActive('table') || showTableMenu}
+            onClick={() => setShowTableMenu(v => !v)}>
+            <span className="text-[11px]">⊞ Table</span>
+          </Btn>
+          {showTableMenu && (
+            <div className="absolute left-0 top-full z-30 mt-1.5 min-w-[180px] rounded-2xl border border-white/[0.12] bg-[#0e1829] py-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+              {[{
+                label: 'Insert table (3×3)',
+                action: () => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
+              }, {
+                label: 'Add row above',
+                action: () => editor.chain().focus().addRowBefore().run(),
+              }, {
+                label: 'Add row below',
+                action: () => editor.chain().focus().addRowAfter().run(),
+              }, {
+                label: 'Delete row',
+                action: () => editor.chain().focus().deleteRow().run(),
+              }, {
+                label: 'Add column before',
+                action: () => editor.chain().focus().addColumnBefore().run(),
+              }, {
+                label: 'Add column after',
+                action: () => editor.chain().focus().addColumnAfter().run(),
+              }, {
+                label: 'Delete column',
+                action: () => editor.chain().focus().deleteColumn().run(),
+              }, {
+                label: 'Merge cells',
+                action: () => editor.chain().focus().mergeCells().run(),
+              }, {
+                label: 'Split cell',
+                action: () => editor.chain().focus().splitCell().run(),
+              }, {
+                label: 'Toggle header row',
+                action: () => editor.chain().focus().toggleHeaderRow().run(),
+              }, {
+                label: 'Delete table',
+                action: () => editor.chain().focus().deleteTable().run(),
+                danger: true,
+              }].map(item => (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => { item.action(); setShowTableMenu(false) }}
+                  className={cn(
+                    'w-full px-4 py-1.5 text-left text-xs transition hover:bg-white/5',
+                    (item as { danger?: boolean }).danger ? 'text-red-400 hover:text-red-300' : 'text-slate-300 hover:text-white',
+                  )}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
 
         <Sep />
 

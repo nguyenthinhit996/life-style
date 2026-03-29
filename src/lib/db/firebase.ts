@@ -171,10 +171,11 @@ export async function getLessonsByChapter(chapterId: string): Promise<Post[]> {
     collection(db, 'posts'),
     where('chapterId', '==', chapterId),
     where('type', '==', 'lesson'),
-    orderBy('order', 'asc'),
   )
   const snap = await getDocs(q)
-  return snap.docs.map(d => toDoc<Post>(d))
+  return snap.docs
+    .map(d => toDoc<Post>(d))
+    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
 }
 
 export async function getBlogPosts(): Promise<Post[]> {

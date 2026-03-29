@@ -77,7 +77,7 @@ export async function getPostBySlug(slug: string): Promise<Post | undefined> {
 export async function getLessonsByChapter(chapterId: string): Promise<Post[]> {
   return posts
     .filter(p => p.chapterId === chapterId && p.type === 'lesson')
-    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
 }
 
 export async function getBlogPosts(): Promise<Post[]> {

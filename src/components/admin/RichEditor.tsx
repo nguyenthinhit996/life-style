@@ -114,6 +114,50 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
       attributes: {
         class: 'min-h-[520px] outline-none p-5 text-slate-200 leading-relaxed',
       },
+      handlePaste(view, event) {
+        const text = event.clipboardData?.getData('text/plain') ?? ''
+        const lines = text.trim().split('\n').map(l => l.trim()).filter(Boolean)
+        // Detect markdown table: at least 2 rows, first separator row is all dashes/pipes
+        const isMdTable =
+          lines.length >= 2 &&
+          lines.some(l => /^\|?[\s\-:]+(\|[\s\-:]+)+\|?$/.test(l))
+        if (!isMdTable) return false
+
+        const rows = lines.filter(l => !/^\|?[\s\-:]+(\|[\s\-:]+)+\|?$/.test(l))
+        const parseRow = (line: string) =>
+          line.replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim())
+
+        const headerCells = parseRow(rows[0])
+        const bodyRows = rows.slice(1)
+
+        const tableNode = view.state.schema.nodes.table.create(null, [
+          view.state.schema.nodes.tableRow.create(null,
+            headerCells.map(cell =>
+              view.state.schema.nodes.tableHeader.create(null,
+                view.state.schema.nodes.paragraph.create(null,
+                  cell ? view.state.schema.text(cell) : undefined
+                )
+              )
+            )
+          ),
+          ...bodyRows.map(row =>
+            view.state.schema.nodes.tableRow.create(null,
+              parseRow(row).map(cell =>
+                view.state.schema.nodes.tableCell.create(null,
+                  view.state.schema.nodes.paragraph.create(null,
+                    cell ? view.state.schema.text(cell) : undefined
+                  )
+                )
+              )
+            )
+          ),
+        ])
+
+        const tr = view.state.tr.replaceSelectionWith(tableNode)
+        view.dispatch(tr)
+        event.preventDefault()
+        return true
+      },
     },
   })
 

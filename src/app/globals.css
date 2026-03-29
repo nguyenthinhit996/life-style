@@ -172,3 +172,8 @@ body {
   height: auto;
 }
 
+/* Override Tailwind Typography: heading strong font-weight 800 → 600 */
+.prose :where(h1, h2, h3, h4, h5, h6):not(:where([class~=not-prose],[class~=not-prose] *)) strong {
+  font-weight: 600;
+}
+

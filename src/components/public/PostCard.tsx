@@ -17,10 +17,17 @@ const categoryLabels: Record<string, string> = {
   LIFESTYLE: 'Lifestyle',
 }
 
+function postHref(post: Post): string {
+  if (post.type === 'lesson' && post.seriesId && post.chapterId) {
+    return `/blog/series/${post.seriesId}/${post.chapterId}/${post.slug}`
+  }
+  return `/blog/${post.slug}`
+}
+
 export default function PostCard({ post }: PostCardProps) {
   return (
     <Link
-      href={`/blog/${post.slug}`}
+      href={postHref(post)}
       className="group flex flex-col rounded-2xl bg-white border border-slate-200 hover:border-violet-300 overflow-hidden transition-all duration-200 hover:shadow-lg hover:shadow-violet-500/8"
     >
       {post.coverImage ? (

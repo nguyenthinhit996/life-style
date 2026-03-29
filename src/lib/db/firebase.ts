@@ -189,6 +189,18 @@ export async function getBlogPosts(): Promise<Post[]> {
   return snap.docs.map(d => toDoc<Post>(d))
 }
 
+export async function getLatestPosts(limit = 6): Promise<Post[]> {
+  const q = query(
+    collection(db, 'posts'),
+    where('published', '==', true),
+  )
+  const snap = await getDocs(q)
+  return snap.docs
+    .map(d => toDoc<Post>(d))
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, limit)
+}
+
 export async function getPostsByCategory(category: string): Promise<Post[]> {
   const q = query(
     collection(db, 'posts'),

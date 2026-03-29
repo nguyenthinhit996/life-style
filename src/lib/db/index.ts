@@ -30,6 +30,7 @@ export const deleteChapter       = db.deleteChapter
 
 export const getPosts            = db.getPosts
 export const getPublishedPosts   = db.getPublishedPosts
+export const getLatestPosts      = db.getLatestPosts
 export const getPostBySlug       = db.getPostBySlug
 export const getPostById         = db.getPostById
 export const getLessonsByChapter = db.getLessonsByChapter

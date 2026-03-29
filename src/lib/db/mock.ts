@@ -86,6 +86,13 @@ export async function getBlogPosts(): Promise<Post[]> {
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 }
 
+export async function getLatestPosts(limit = 6): Promise<Post[]> {
+  return posts
+    .filter(p => p.published)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, limit)
+}
+
 export async function getPostsByCategory(category: string): Promise<Post[]> {
   return posts.filter(p => p.category === category && p.published)
 }

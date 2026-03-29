@@ -1,10 +1,9 @@
 import Link from 'next/link'
-import { getBlogPosts } from '@/lib/db'
+import { getLatestPosts } from '@/lib/db'
 import PostCard from './PostCard'
 
 export default async function FeaturedPostsSection() {
-  const posts = await getBlogPosts()
-  const featured = posts.slice(0, 3)
+  const featured = await getLatestPosts(6)
 
   if (featured.length === 0) return null
 
@@ -17,7 +16,7 @@ export default async function FeaturedPostsSection() {
               Latest Posts
             </h2>
             <p className="mt-1 text-slate-400 font-body text-sm">
-              Fresh articles from the blog
+              Fresh articles &amp; lessons
             </p>
           </div>
           <Link

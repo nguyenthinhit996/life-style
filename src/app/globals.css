@@ -172,6 +172,46 @@ body {
   height: auto;
 }
 
+/* ── Details / collapsible answer block (public) ── */
+.public-content details.details-block {
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  margin: 1.25rem 0;
+  overflow: hidden;
+}
+.public-content details.details-block summary {
+  cursor: pointer;
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  background: #F1F5F9;
+  color: #0F172A;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+  transition: background 0.15s;
+}
+.public-content details.details-block summary::-webkit-details-marker { display: none; }
+.public-content details.details-block summary::before {
+  content: '▶';
+  font-size: 0.7rem;
+  color: #7C3AED;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.public-content details.details-block[open] summary {
+  background: #EDE9FE;
+}
+.public-content details.details-block[open] summary::before {
+  transform: rotate(90deg);
+}
+.public-content details.details-block .details-content {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid #E2E8F0;
+}
+
 /* Override Tailwind Typography: heading strong font-weight 800 → 600 */
 .prose :where(h1, h2, h3, h4, h5, h6):not(:where([class~=not-prose],[class~=not-prose] *)) strong {
   font-weight: 600;

@@ -24,6 +24,7 @@ import Placeholder from '@tiptap/extension-placeholder'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import { common, createLowlight } from 'lowlight'
 import Color from '@tiptap/extension-color'
+import { DetailsBlock } from '@/components/admin/extensions/DetailsBlock'
 
 const lowlight = createLowlight(common)
 import { TextStyle } from '@tiptap/extension-text-style'
@@ -92,6 +93,7 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
       Link.configure({ openOnClick: false, HTMLAttributes: { class: 'text-violet-400 underline' } }),
       ResizableImage.configure({ HTMLAttributes: { class: 'rounded-lg my-4' } }),
       Placeholder.configure({ placeholder: 'Start writing your post…' }),
+      DetailsBlock,
     ],
     content: value,
     immediatelyRender: false,
@@ -307,6 +309,23 @@ export default function RichEditor({ value, onChange, onPreview, showPreview }: 
         )}        <Btn title="Horizontal rule"
           onClick={() => editor.chain().focus().setHorizontalRule().run()}>
           ─
+        </Btn>
+        <Btn
+          title="Details / collapsible answer block"
+          active={editor.isActive('detailsBlock')}
+          onClick={() =>
+            editor
+              .chain()
+              .focus()
+              .insertContent({
+                type: 'detailsBlock',
+                attrs: { summary: 'Click to expand' },
+                content: [{ type: 'paragraph' }],
+              })
+              .run()
+          }
+        >
+          <span className="text-[11px]">▶ Details</span>
         </Btn>
 
         <Sep />

@@ -171,23 +171,27 @@ body {
 }
 .ProseMirror table td,
 .ProseMirror table th {
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid #2a3a52 !important;
   padding: 0.5rem 0.75rem;
   vertical-align: top;
   min-width: 80px;
-  color: #cbd5e1;
+  background-color: #0c1524 !important;
+  color: #cbd5e1 !important;
 }
 .ProseMirror table th {
-  background: rgba(255,255,255,0.06);
+  background-color: #15263d !important;
   font-weight: 600;
   text-align: left;
-  color: #e2e8f0;
+  color: #e2e8f0 !important;
 }
 .ProseMirror table tr:nth-child(even) td {
-  background: rgba(255,255,255,0.02);
+  background-color: #0e1a2e !important;
 }
-.ProseMirror .selectedCell {
-  background: rgba(124,58,237,0.25) !important;
+.ProseMirror .selectedCell td,
+.ProseMirror .selectedCell th,
+.ProseMirror td.selectedCell,
+.ProseMirror th.selectedCell {
+  background-color: #2e1f5e !important;
 }
 .ProseMirror .column-resize-handle {
   position: absolute;

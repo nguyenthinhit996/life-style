@@ -51,7 +51,7 @@ export default async function SeriesDetailPage({ params }: Props) {
     <div className="min-h-screen pt-24 pb-20 px-6">
       <div className="max-w-4xl mx-auto">
         {/* Breadcrumb */}
-        <nav className="mb-8 text-sm font-mono text-slate-400" aria-label="Breadcrumb">
+        <nav className="mb-8 text-sm font-mono text-slate-400 flex flex-wrap items-center" aria-label="Breadcrumb">
           <Link href="/blog" className="hover:text-slate-600 transition-colors">
             Blog
           </Link>

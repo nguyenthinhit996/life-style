@@ -61,12 +61,12 @@ export default async function BlogPostPage({ params }: Props) {
       <div className="min-h-screen pt-24 pb-20 overflow-x-hidden">
         <article className="max-w-3xl mx-auto px-6">
           {/* Breadcrumb */}
-          <nav className="mb-6 text-sm font-mono text-slate-400" aria-label="Breadcrumb">
+          <nav className="mb-6 text-sm font-mono text-slate-400 flex flex-wrap items-center" aria-label="Breadcrumb">
             <Link href="/blog" className="hover:text-slate-600 transition-colors">
               Blog
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-slate-600 truncate">{post.title}</span>
+            <span className="text-slate-600">{post.title}</span>
           </nav>
 
           {/* Header */}

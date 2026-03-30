@@ -79,7 +79,7 @@ export default async function LessonPage({ params }: Props) {
           {/* Main content */}
           <article className="flex-1 min-w-0 max-w-3xl py-10 pb-20">
             {/* Breadcrumb */}
-            <nav className="mb-6 text-sm font-mono text-slate-400" aria-label="Breadcrumb">
+            <nav className="mb-6 text-sm font-mono text-slate-400 flex flex-wrap items-center" aria-label="Breadcrumb">
               <Link href="/blog" className="hover:text-slate-600 transition-colors">
                 Blog
               </Link>
@@ -91,7 +91,7 @@ export default async function LessonPage({ params }: Props) {
                 {tree.title}
               </Link>
               <span className="mx-2">/</span>
-              <span className="text-slate-600 truncate">{post.title}</span>
+              <span className="text-slate-600">{post.title}</span>
             </nav>
 
             {/* Mobile: back to series link */}

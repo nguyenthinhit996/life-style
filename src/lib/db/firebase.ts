@@ -1,61 +1,66 @@
 /**
- * Firestore data layer — Firebase Admin SDK (server-side only).
- * Runs exclusively in Next.js Server Components / Route Handlers.
- * Uses a service account to bypass Firestore security rules.
- *
- * Prerequisites:
- *  1. Create a Firebase project at https://console.firebase.google.com
- *  2. Enable Firestore (Native mode)
- *  3. Go to Project Settings → Service Accounts → Generate new private key
- *  4. Add these vars to .env.local (never expose to the client):
- *       FIREBASE_PROJECT_ID=your-project-id
- *       FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxx@your-project.iam.gserviceaccount.com
- *       FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
- *  5. Run the seed script:  node scripts/seed-firestore.mjs
+ * Firestore data layer — Firebase client SDK.
+ * Reads: allowed publicly via Firestore rules (allow read: if true).
+ * Writes: go through Next.js API routes protected by NextAuth session — client cannot write directly.
  */
 
-import { initializeApp, getApps, cert, App } from 'firebase-admin/app'
-import { getFirestore, DocumentSnapshot, QueryDocumentSnapshot } from 'firebase-admin/firestore'
+import { initializeApp, getApps, getApp } from 'firebase/app'
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  setDoc,
+  query,
+  where,
+  orderBy,
+  QueryDocumentSnapshot,
+  DocumentData,
+} from 'firebase/firestore'
 import type { Series, Chapter, Post, User } from '@/types'
 
-// ── Firebase Admin init (singleton) ──────────────────────
-function getAdminApp(): App {
-  if (getApps().length > 0) return getApps()[0]
-  return initializeApp({
-    credential: cert({
-      projectId:   process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      // Newlines in the private key are escaped in env vars
-      privateKey:  process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    }),
-  })
+// ── Firebase init (singleton) ─────────────────────────────
+const firebaseConfig = {
+  apiKey:            process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain:        process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId:         process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket:     process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId:             process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 }
 
-const db = getFirestore(getAdminApp())
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig)
+const db  = getFirestore(app)
 
 // ── Helpers ───────────────────────────────────────────────
-function toDoc<T>(snap: DocumentSnapshot | QueryDocumentSnapshot): T {
+function toDoc<T>(snap: QueryDocumentSnapshot<DocumentData>): T {
   return { id: snap.id, ...snap.data() } as T
 }
 
 // ── Series ────────────────────────────────────────────────
 export async function getSeries(): Promise<Series[]> {
-  const snap = await db.collection('series').get()
+  const snap = await getDocs(collection(db, 'series'))
   return snap.docs.map(d => toDoc<Series>(d))
 }
 
 export async function getPublishedSeries(): Promise<Series[]> {
-  const snap = await db.collection('series')
-    .where('published', '==', true)
-    .orderBy('order', 'asc')
-    .get()
+  const q = query(
+    collection(db, 'series'),
+    where('published', '==', true),
+    orderBy('order', 'asc'),
+  )
+  const snap = await getDocs(q)
   return snap.docs.map(d => toDoc<Series>(d))
 }
 
 export async function getSeriesById(id: string): Promise<Series | undefined> {
-  const snap = await db.collection('series').doc(id).get()
-  if (!snap.exists) return undefined
-  return toDoc<Series>(snap)
+  const snap = await getDoc(doc(db, 'series', id))
+  if (!snap.exists()) return undefined
+  return { id: snap.id, ...snap.data() } as Series
 }
 
 export async function createSeries(data: Omit<Series, 'id'>): Promise<Series> {
@@ -68,37 +73,39 @@ export async function createSeries(data: Omit<Series, 'id'>): Promise<Series> {
     createdAt: data.createdAt ?? now,
     updatedAt: data.updatedAt ?? now,
   }
-  const ref = await db.collection('series').add(doc_data)
+  const ref = await addDoc(collection(db, 'series'), doc_data)
   return { id: ref.id, ...doc_data }
 }
 
 export async function updateSeries(id: string, data: Partial<Series>): Promise<Series | null> {
-  const ref = db.collection('series').doc(id)
-  const snap = await ref.get()
-  if (!snap.exists) return null
-  await ref.update(data)
+  const ref = doc(db, 'series', id)
+  const snap = await getDoc(ref)
+  if (!snap.exists()) return null
+  await updateDoc(ref, data as DocumentData)
   return { id, ...snap.data(), ...data } as Series
 }
 
 export async function deleteSeries(id: string): Promise<boolean> {
-  const ref = db.collection('series').doc(id)
-  const snap = await ref.get()
-  if (!snap.exists) return false
-  await ref.delete()
+  const ref = doc(db, 'series', id)
+  const snap = await getDoc(ref)
+  if (!snap.exists()) return false
+  await deleteDoc(ref)
   return true
 }
 
 // ── Chapters ──────────────────────────────────────────────
 export async function getChapters(): Promise<Chapter[]> {
-  const snap = await db.collection('chapters').get()
+  const snap = await getDocs(collection(db, 'chapters'))
   return snap.docs.map(d => toDoc<Chapter>(d))
 }
 
 export async function getChaptersBySeries(seriesId: string): Promise<Chapter[]> {
-  const snap = await db.collection('chapters')
-    .where('seriesId', '==', seriesId)
-    .orderBy('order', 'asc')
-    .get()
+  const q = query(
+    collection(db, 'chapters'),
+    where('seriesId', '==', seriesId),
+    orderBy('order', 'asc'),
+  )
+  const snap = await getDocs(q)
   return snap.docs.map(d => toDoc<Chapter>(d))
 }
 
@@ -108,70 +115,77 @@ export async function createChapter(data: Omit<Chapter, 'id'>): Promise<Chapter>
     order: data.order ?? 0,
     totalLessons: data.totalLessons ?? 0,
   }
-  const ref = await db.collection('chapters').add(doc_data)
+  const ref = await addDoc(collection(db, 'chapters'), doc_data)
   return { id: ref.id, ...doc_data }
 }
 
 export async function updateChapter(id: string, data: Partial<Chapter>): Promise<Chapter | null> {
-  const ref = db.collection('chapters').doc(id)
-  const snap = await ref.get()
-  if (!snap.exists) return null
-  await ref.update(data)
+  const ref = doc(db, 'chapters', id)
+  const snap = await getDoc(ref)
+  if (!snap.exists()) return null
+  await updateDoc(ref, data as DocumentData)
   return { id, ...snap.data(), ...data } as Chapter
 }
 
 export async function deleteChapter(id: string): Promise<boolean> {
-  const ref = db.collection('chapters').doc(id)
-  const snap = await ref.get()
-  if (!snap.exists) return false
-  await ref.delete()
+  const ref = doc(db, 'chapters', id)
+  const snap = await getDoc(ref)
+  if (!snap.exists()) return false
+  await deleteDoc(ref)
   return true
 }
 
 // ── Posts / Lessons ───────────────────────────────────────
 export async function getPosts(): Promise<Post[]> {
-  const snap = await db.collection('posts').get()
+  const snap = await getDocs(collection(db, 'posts'))
   return snap.docs.map(d => toDoc<Post>(d))
 }
 
 export async function getPublishedPosts(): Promise<Post[]> {
-  const snap = await db.collection('posts').where('published', '==', true).get()
+  const q = query(collection(db, 'posts'), where('published', '==', true))
+  const snap = await getDocs(q)
   return snap.docs.map(d => toDoc<Post>(d))
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | undefined> {
-  const snap = await db.collection('posts').where('slug', '==', slug).get()
+  const q = query(collection(db, 'posts'), where('slug', '==', slug))
+  const snap = await getDocs(q)
   if (snap.empty) return undefined
   return toDoc<Post>(snap.docs[0])
 }
 
 export async function getPostById(id: string): Promise<Post | undefined> {
-  const snap = await db.collection('posts').doc(id).get()
-  if (!snap.exists) return undefined
-  return toDoc<Post>(snap)
+  const snap = await getDoc(doc(db, 'posts', id))
+  if (!snap.exists()) return undefined
+  return { id: snap.id, ...snap.data() } as Post
 }
 
 export async function getLessonsByChapter(chapterId: string): Promise<Post[]> {
-  const snap = await db.collection('posts')
-    .where('chapterId', '==', chapterId)
-    .where('type', '==', 'lesson')
-    .get()
+  const q = query(
+    collection(db, 'posts'),
+    where('chapterId', '==', chapterId),
+    where('type', '==', 'lesson'),
+  )
+  const snap = await getDocs(q)
   return snap.docs
     .map(d => toDoc<Post>(d))
     .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
 }
 
 export async function getBlogPosts(): Promise<Post[]> {
-  const snap = await db.collection('posts')
-    .where('type', '==', 'blog')
-    .where('published', '==', true)
-    .orderBy('createdAt', 'desc')
-    .get()
+  const q = query(
+    collection(db, 'posts'),
+    where('type', '==', 'blog'),
+    where('published', '==', true),
+    orderBy('createdAt', 'desc'),
+  )
+  const snap = await getDocs(q)
   return snap.docs.map(d => toDoc<Post>(d))
 }
 
 export async function getLatestPosts(limit = 6): Promise<Post[]> {
-  const snap = await db.collection('posts').where('published', '==', true).get()
+  const q = query(collection(db, 'posts'), where('published', '==', true))
+  const snap = await getDocs(q)
   return snap.docs
     .map(d => toDoc<Post>(d))
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
@@ -179,10 +193,12 @@ export async function getLatestPosts(limit = 6): Promise<Post[]> {
 }
 
 export async function getPostsByCategory(category: string): Promise<Post[]> {
-  const snap = await db.collection('posts')
-    .where('category', '==', category)
-    .where('published', '==', true)
-    .get()
+  const q = query(
+    collection(db, 'posts'),
+    where('category', '==', category),
+    where('published', '==', true),
+  )
+  const snap = await getDocs(q)
   return snap.docs.map(d => toDoc<Post>(d))
 }
 
@@ -210,29 +226,30 @@ export async function createPost(data: Omit<Post, 'id'>): Promise<Post> {
     createdAt: data.createdAt ?? now,
     updatedAt: data.updatedAt ?? now,
   }
-  const ref = await db.collection('posts').add(doc_data)
+  const ref = await addDoc(collection(db, 'posts'), doc_data)
   return { id: ref.id, ...doc_data }
 }
 
 export async function updatePost(id: string, data: Partial<Post>): Promise<Post | null> {
-  const ref = db.collection('posts').doc(id)
-  const snap = await ref.get()
-  if (!snap.exists) return null
-  await ref.update(data)
+  const ref = doc(db, 'posts', id)
+  const snap = await getDoc(ref)
+  if (!snap.exists()) return null
+  await updateDoc(ref, data as DocumentData)
   return { id, ...snap.data(), ...data } as Post
 }
 
 export async function deletePost(id: string): Promise<boolean> {
-  const ref = db.collection('posts').doc(id)
-  const snap = await ref.get()
-  if (!snap.exists) return false
-  await ref.delete()
+  const ref = doc(db, 'posts', id)
+  const snap = await getDoc(ref)
+  if (!snap.exists()) return false
+  await deleteDoc(ref)
   return true
 }
 
 // ── Auth ──────────────────────────────────────────────────
 export async function getUserByEmail(email: string): Promise<User | undefined> {
-  const snap = await db.collection('users').where('email', '==', email).get()
+  const q = query(collection(db, 'users'), where('email', '==', email))
+  const snap = await getDocs(q)
   if (snap.empty) return undefined
   return toDoc<User>(snap.docs[0])
 }
@@ -245,13 +262,13 @@ type About = {
 }
 
 export async function getAbout(): Promise<About> {
-  const snap = await db.collection('about').doc('main').get()
-  if (!snap.exists) {
+  const snap = await getDoc(doc(db, 'about', 'main'))
+  if (!snap.exists()) {
     return { bio: '', skills: [], social: { github: '', linkedin: '', twitter: '' } }
   }
   return snap.data() as About
 }
 
 export async function updateAbout(data: About): Promise<void> {
-  await db.collection('about').doc('main').set(data, { merge: true })
+  await setDoc(doc(db, 'about', 'main'), data, { merge: true })
 }

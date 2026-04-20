@@ -1,15 +1,16 @@
 /**
  * Auto-selects the DB provider at runtime:
- *   - Firebase Firestore  → when NEXT_PUBLIC_FIREBASE_PROJECT_ID is set
- *   - Mock JSON files     → fallback (local dev with no Firebase config)
+ *   - Firebase Firestore (Admin SDK) → when FIREBASE_PROJECT_ID is set
+ *   - Mock JSON files                → fallback (local dev with no Firebase config)
  *
- * No manual switching needed. Just fill in .env.local and restart.
+ * No manual switching needed. Add service account vars to .env.local and restart.
  */
 import type * as DBType from './mock'
 
 const useFirebase = !!(
-  process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID &&
-  process.env.NEXT_PUBLIC_FIREBASE_API_KEY
+  process.env.FIREBASE_PROJECT_ID &&
+  process.env.FIREBASE_CLIENT_EMAIL &&
+  process.env.FIREBASE_PRIVATE_KEY
 )
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
